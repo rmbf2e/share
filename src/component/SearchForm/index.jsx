@@ -1,11 +1,11 @@
 import url from 'url'
-import { parseMoment, formatMoment } from 'util/moment'
-import isEmptyQuery from 'util/isEmptyQuery'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Button } from 'antd'
 import forEach from 'lodash/forEach'
 import reduce from 'lodash/reduce'
+import isEmptyQuery from 'share/src/util/isEmptyQuery'
+import { parseMoment, formatMoment } from 'share/src/util/moment'
 
 /*
  * 该组件解决的几个问题
@@ -17,7 +17,8 @@ import reduce from 'lodash/reduce'
  * 使用方法：
  * 在组件中使用SearchForm代替antd的Form
  * 将应用组件使用antd的Form.create()修饰，然后将props.form传递给SearchForm的prop
- * 默认提交时会带pageNo参数为1，可通过prop withPagination={false}取消该行为
+ * 默认提交时会带page参数为1，可通过prop withPagination={false}取消该行为
+ * 提交表单时，表单项name以Time结尾的被格式化为时间格式
  */
 export default class SearchForm extends React.Component {
   // 标记此次history push是否由submit引起，避免submit引起的history变更调用两次props.onSubmit
@@ -127,7 +128,7 @@ export default class SearchForm extends React.Component {
     )
     const values = this.compactFormValues(formValues)
     if (withPagination) {
-      values.pageNo = 1
+      values.page = 1
       values.pageSize = query.pageSize || pageSize
     }
     push({
@@ -160,6 +161,7 @@ export default class SearchForm extends React.Component {
       onSubmit,
       children,
       withPagination,
+      pageSize,
       ...props
     } = this.props
     return (

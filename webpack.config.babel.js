@@ -29,6 +29,7 @@ const config = {
       style: resolvePath('./src/style'),
       mixin: resolvePath('./src/mixin'),
       src: resolvePath('./src'),
+      share: resolvePath('./'),
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.less'],
   },

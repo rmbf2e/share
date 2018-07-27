@@ -1,4 +1,6 @@
-import pull from 'lodash/pull'
+import pullAll from 'lodash/pullAll'
+
+const emptyValues = ['', null, undefined]
 
 /**
  * 判定url中query中的项目是否是空值
@@ -7,10 +9,11 @@ import pull from 'lodash/pull'
  * */
 const isEmptyQuery = v => {
   if (Array.isArray(v)) {
-    pull(v, null, '', undefined)
+    v = [...v]
+    pullAll(v, emptyValues)
     return v.length === 0
   }
-  return v === null || v === undefined || v === ''
+  return emptyValues.includes(v)
 }
 
 export default isEmptyQuery
