@@ -1,0 +1,10 @@
+/node_modules
+.idea
+package-lock.json
+app/router.jsx
+dist
+*.vim
+*.log
+e2e/report/*
+coverage
+out
