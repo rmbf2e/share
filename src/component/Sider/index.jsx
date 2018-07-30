@@ -11,13 +11,16 @@ export default class Sider extends React.Component {
   static propTypes = {
     store: PropTypes.shape({
       menu: PropTypes.object,
-      sider: PropTypes.object,
+      // sider: PropTypes.object,
       router: PropTypes.object,
     }).isRequired,
   }
 
   render() {
-    const { store: { sider, menu } } = this.props
+    const {
+      store: { menu },
+    } = this.props
+    const { sider } = menu
     const menus = toJS(sider.menus)
     const selectedKeys = toJS(menu.selectedKeys)
     return (

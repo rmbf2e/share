@@ -1,12 +1,46 @@
 import { observable, action, toJS } from 'mobx'
 import find from 'lodash/find'
+import config from 'share/config'
+import storeProp from 'share/storeProp'
+
+@storeProp({
+  // 定义menus属性与setMenus方法
+  setter: [
+    {
+      name: 'menus',
+      default: [],
+    },
+  ],
+})
+class Sider {
+  constructor(parent) {
+    this.parent = parent
+  }
+
+  // sider默认折叠
+  @observable
+  collapsed = config.siderCollapsed
+
+  @action
+  toggle = () => {
+    this.collapsed = !this.collapsed
+    // 如果关闭sider，清空顶部菜单的openKeys
+    if (this.collapsed) {
+      this.parent.onOpenChange([])
+    }
+  }
+}
 
 class Menu {
   menus = []
 
-  @observable selectedKeys = []
+  sider = new Sider(this)
 
-  @observable openKeys = []
+  @observable
+  selectedKeys = []
+
+  @observable
+  openKeys = []
 
   // 设置当前激活状态的菜单
   // 在监听路由切换时调用
@@ -17,7 +51,7 @@ class Menu {
     const currentSubMenus = find(menus, m => find(m.children, c => c.to === key)) || menus[0]
 
     this.openKeys[0] = currentSubMenus.name
-    import('store/sider').then(sider => sider.default.setMenus(currentSubMenus.children))
+    this.sider.setMenus(currentSubMenus.children)
   }
 
   @action

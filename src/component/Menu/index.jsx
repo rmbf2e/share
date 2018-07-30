@@ -11,6 +11,8 @@ const { SubMenu } = Menu
 @inject('store')
 @observer
 export default class Menus extends React.Component {
+  stopSubscribeHistory = null
+
   static propTypes = {
     store: PropTypes.shape({
       sider: PropTypes.object,
@@ -20,26 +22,30 @@ export default class Menus extends React.Component {
   }
 
   componentWillMount() {
-    const { store: { router: { history } } } = this.props
+    const {
+      store: {
+        router: { history },
+      },
+    } = this.props
     this.stopSubscribeHistory = history.subscribe(location => {
-      const { store: { menu } } = this.props
+      const {
+        store: { menu },
+      } = this.props
       const key = getFirstPathname(location.pathname)
       menu.setCurrent({ key })
     })
   }
 
   componentWillUnmount() {
-    if (this.stopSubscribeHistory) {
-      this.stopSubscribeHistory()
-    }
+    this.stopSubscribeHistory()
   }
 
   renderMenus = () => {
     const {
       store: {
-      menu,
-      sider,
-      router: { push },
+        menu,
+        sider,
+        router: { push },
       },
     } = this.props
     const menus = toJS(menu.menus)
@@ -69,19 +75,21 @@ export default class Menus extends React.Component {
   }
 
   render() {
-    const { store: { menu } } = this.props
+    const {
+      store: { menu },
+    } = this.props
     const selectedKeys = toJS(menu.selectedKeys)
-    const props = {
-      selectedKeys,
-      // onSelect: menu.setCurrent,
-      mode: 'horizontal',
-      // onOpenChange: menu.onOpenChange,
-      // openKeys: toJS(menu.openKeys),
-    }
+    // const props = {
+    //   selectedKeys,
+    //   // onSelect: menu.setCurrent,
+    //   mode: 'horizontal',
+    //   // onOpenChange: menu.onOpenChange,
+    //   // openKeys: toJS(menu.openKeys),
+    // }
     return (
-      <Menu {...props}>
+      <Menu selectedKeys={selectedKeys} mode="horizontal">
         {this.renderMenus()}
       </Menu>
-)
+    )
   }
 }
