@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Layout, notification, LocaleProvider } from 'antd'
 import { Provider } from 'mobx-react'
 import { Router } from 'react-router-dom'
@@ -32,15 +33,32 @@ const onApiSuccess = (res, req) => {
 }
 
 class App extends React.PureComponent {
+  static propTypes = {
+    store: PropTypes.shape({
+      app: PropTypes.object,
+    }).isRequired,
+    Header: PropTypes.func,
+    Sider: PropTypes.func,
+    Content: PropTypes.func,
+  }
+
+  static defaultProps = {
+    Header: null,
+    Sider: null,
+    Content: null,
+  }
+
   state = {
     loadingMeta: true,
   }
 
   componentDidMount() {
-    const { store } = this.props
+    const {
+      store: { app },
+    } = this.props
     fxios.on('error', onApiError)
     fxios.on('success', onApiSuccess)
-    store.app.load().then(() => {
+    app.load().then(() => {
       this.setState({
         loadingMeta: false,
       })
@@ -64,17 +82,27 @@ class App extends React.PureComponent {
 
   render() {
     const { loadingMeta } = this.state
-    const { store } = this.props
-    const { router: { history } } = store
+    const {
+      store,
+      Header: PropHeader,
+      Content: PropContent,
+      Sider: PropSider,
+    } = this.props
+    const {
+      router: { history },
+    } = store
+    const AppHeader = PropHeader || Header
+    const AppSider = PropSider || Sider
+    const AppContent = PropContent || Content
     return (
       <Provider store={store}>
         <LocaleProvider locale={zhCN}>
           <Router history={history}>
             <Layout>
-              <Header />
+              <AppHeader />
               <Layout>
-                <Sider />
-                <Content loading={loadingMeta} />
+                <AppSider />
+                <AppContent loading={loadingMeta} />
               </Layout>
             </Layout>
           </Router>
