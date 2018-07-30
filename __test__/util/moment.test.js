@@ -1,5 +1,5 @@
 import Moment from 'moment'
-import { parseMoment, formatMoment } from 'util/moment'
+import { parseMoment, formatMoment } from 'share/util/moment'
 
 describe('utils/moment', () => {
   it('解析字符串到Moment对象', () => {

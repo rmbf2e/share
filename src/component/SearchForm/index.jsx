@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import { Form, Button } from 'antd'
 import forEach from 'lodash/forEach'
 import reduce from 'lodash/reduce'
-import isEmptyQuery from 'share/src/util/isEmptyQuery'
-import { parseMoment, formatMoment } from 'share/src/util/moment'
+import isEmptyQuery from 'share/util/isEmptyQuery'
+import { parseMoment, formatMoment } from 'share/util/moment'
 
 /*
  * 该组件解决的几个问题

@@ -6,8 +6,8 @@ import Moment from 'moment'
 import {
  Input, Form, DatePicker, TimePicker,
 } from 'antd'
-import SearchForm from 'component/SearchForm'
-import router from 'store/router'
+import SearchForm from 'share/component/SearchForm'
+import router from 'share/store/router'
 
 const pageSize = 20
 
@@ -58,7 +58,7 @@ describe('components/SearchForm', () => {
     expect(submit.mock.calls).toHaveLength(2)
     expect(router.query).toEqual({
       firstName: 'first',
-      pageNo: '1',
+      page: '1',
       pageSize: String(pageSize),
     })
     expect(router.location.hash).toBe(hash)
