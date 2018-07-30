@@ -3,11 +3,10 @@ import { toJS } from 'mobx'
 import PropTypes from 'prop-types'
 import { Menu } from 'antd'
 import { observer, inject } from 'mobx-react'
-import { history } from 'store/router'
+import getFirstPathname from 'share/util/getFirstPathname'
 import Link from './Link'
 
 const { SubMenu } = Menu
-// const MenuItemGroup = Menu.ItemGroup
 
 @inject('store')
 @observer
@@ -21,9 +20,10 @@ export default class Menus extends React.Component {
   }
 
   componentWillMount() {
+    const { store: { router: { history } } } = this.props
     this.stopSubscribeHistory = history.subscribe(location => {
-      const { menu } = this.props.store
-      const key = location.pathname
+      const { store: { menu } } = this.props
+      const key = getFirstPathname(location.pathname)
       menu.setCurrent({ key })
     })
   }
@@ -34,33 +34,23 @@ export default class Menus extends React.Component {
     }
   }
 
-  // 检测重复进入同一个路由的路径
-  checkSamePathname = e => {
-    const {
-      router: { location },
-    } = this.props.store
-    const href = e.target.getAttribute('href')
-    if (href === location.pathname) {
-      e.preventDefault()
-      e.stopPropagation()
-      return false
-    }
-    return true
-  }
-
   renderMenus = () => {
     const {
+      store: {
       menu,
       sider,
       router: { push },
-    } = this.props.store
+      },
+    } = this.props
     const menus = toJS(menu.menus)
     if (sider.collapsed) {
       return menus.map(topMenu => (
         <SubMenu key={topMenu.name} title={topMenu.name}>
           {topMenu.children.map(m => (
             <Menu.Item key={m.to}>
-              <Link to={m.to}>{m.name}</Link>
+              <Link to={m.to}>
+                {m.name}
+              </Link>
             </Menu.Item>
           ))}
         </SubMenu>
@@ -79,7 +69,7 @@ export default class Menus extends React.Component {
   }
 
   render() {
-    const { menu } = this.props.store
+    const { store: { menu } } = this.props
     const selectedKeys = toJS(menu.selectedKeys)
     const props = {
       selectedKeys,
@@ -88,6 +78,10 @@ export default class Menus extends React.Component {
       // onOpenChange: menu.onOpenChange,
       // openKeys: toJS(menu.openKeys),
     }
-    return <Menu {...props}>{this.renderMenus()}</Menu>
+    return (
+      <Menu {...props}>
+        {this.renderMenus()}
+      </Menu>
+)
   }
 }

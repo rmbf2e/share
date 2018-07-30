@@ -1,14 +1,14 @@
-import fxios from 'util/fxios'
 import React from 'react'
 import { Layout, notification, LocaleProvider } from 'antd'
 import { Provider } from 'mobx-react'
 import { Router } from 'react-router-dom'
 import zhCN from 'antd/lib/locale-provider/zh_CN'
-import store from 'app/store'
-import Header from 'component/Header'
-import Content from 'component/Content'
-import Sider from 'component/Sider'
-import { history } from 'store/router'
+import fxios from 'share/util/fxios'
+// import store from 'app/store'
+import Header from 'share/component/Header'
+import Content from 'share/component/Content'
+import Sider from 'share/component/Sider'
+// import { history } from 'share/store/router'
 // import s from './style.m.less'
 
 // 监听后端接口错误函数
@@ -37,6 +37,7 @@ class App extends React.PureComponent {
   }
 
   componentDidMount() {
+    const { store } = this.props
     fxios.on('error', onApiError)
     fxios.on('success', onApiSuccess)
     store.app.load().then(() => {
@@ -44,6 +45,12 @@ class App extends React.PureComponent {
         loadingMeta: false,
       })
     })
+  }
+
+  // 解除监听接口错误
+  componentWillUnmount() {
+    fxios.removeListener('error', onApiError)
+    fxios.removeListener('success', onApiSuccess)
   }
 
   // 监听页面错误
@@ -55,13 +62,10 @@ class App extends React.PureComponent {
     })
   }
 
-  // 解除监听接口错误
-  componentWillUnmount() {
-    fxios.removeListener('error', onApiError)
-    fxios.removeListener('success', onApiSuccess)
-  }
-
   render() {
+    const { loadingMeta } = this.state
+    const { store } = this.props
+    const { router: { history } } = store
     return (
       <Provider store={store}>
         <LocaleProvider locale={zhCN}>
@@ -70,7 +74,7 @@ class App extends React.PureComponent {
               <Header />
               <Layout>
                 <Sider />
-                <Content loading={this.state.loadingMeta} />
+                <Content loading={loadingMeta} />
               </Layout>
             </Layout>
           </Router>

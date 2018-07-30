@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 
 @inject('store')
+@observer
 export default class MenuLink extends React.Component {
   static propTypes = {
     store: PropTypes.shape({
@@ -13,8 +14,10 @@ export default class MenuLink extends React.Component {
 
   checkSamePathname = e => {
     const {
-      router: { location },
-    } = this.props.store
+      store: {
+        router: { location },
+      },
+    } = this.props
     const href = e.target.getAttribute('href')
     if (href === location.pathname) {
       e.preventDefault()

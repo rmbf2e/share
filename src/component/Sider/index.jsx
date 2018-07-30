@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Menu, Layout, Icon } from 'antd'
 import { observer, inject } from 'mobx-react'
 import { toJS } from 'mobx'
-import MenuLink from 'component/Menu/Link'
+import MenuLink from 'share/component/Menu/Link'
 
 @inject('store')
 @observer
@@ -17,7 +17,7 @@ export default class Sider extends React.Component {
   }
 
   render() {
-    const { sider, menu } = this.props.store
+    const { store: { sider, menu } } = this.props
     const menus = toJS(sider.menus)
     const selectedKeys = toJS(menu.selectedKeys)
     return (
@@ -35,7 +35,9 @@ export default class Sider extends React.Component {
             <Menu.Item key={m.to}>
               <MenuLink onClick={this.checkSamePathname} to={m.to}>
                 <Icon type={m.icon} />
-                <span>{m.name}</span>
+                <span>
+                  {m.name}
+                </span>
               </MenuLink>
             </Menu.Item>
           ))}

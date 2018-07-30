@@ -21,15 +21,6 @@ const config = {
   // },
   resolve: {
     alias: {
-      util: resolvePath('./src/util'),
-      component: resolvePath('./src/component'),
-      page: resolvePath('./src/page'),
-      store: resolvePath('./src/store'),
-      storeProp: resolvePath('./src/storeProp'),
-      style: resolvePath('./src/style'),
-      mixin: resolvePath('./src/mixin'),
-      src: resolvePath('./src'),
-      app: resolvePath('./src'),
       share: resolvePath('./src'),
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.less'],
