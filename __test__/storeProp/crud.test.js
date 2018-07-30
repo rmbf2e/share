@@ -1,18 +1,31 @@
 // import fetch from 'util/fetch'
 import { toJS } from 'mobx'
 import fetchMock from 'fetch-mock'
-import crud from 'storeProp/crud'
-import config from 'app/config'
+import crud from 'share/storeProp/crud'
+import config from 'share/config'
+import fxios from 'share/util/fxios'
 
 describe('storeProp/crud', () => {
   // const host = 'http://localhost'
   const option = {
     name: 'user',
     default: {},
-    create: { url: 'user/create' },
-    update: { url: 'user/update' },
-    destroy: { url: 'user/destroy' },
-    fetch: { url: 'user/fetch' },
+    create: {
+      url: 'user/create',
+      method: fxios.post,
+    },
+    update: {
+      url: 'user/update',
+      method: fxios.put,
+    },
+    destroy: {
+      url: 'user/destroy',
+      method: fxios.delete,
+    },
+    fetch: {
+      url: 'user/fetch',
+      method: fxios.get,
+    },
   }
   class A {
     constructor() {
@@ -29,7 +42,6 @@ describe('storeProp/crud', () => {
 
   it('test create.url与createingUser', () => {
     fetchMock.post(`${config.baseURL}${option.create.url}`, {
-      code: '000000',
     })
     expect(a.creatingUser).toBe(false)
     const p = a.createUser({})
@@ -41,7 +53,6 @@ describe('storeProp/crud', () => {
 
   it('测试create的数据与返回数据', () => {
     const mockRes = {
-      code: '000000',
       data: { name: 'abc' },
     }
     fetchMock.post(`${config.baseURL}${option.create.url}`, mockRes)
@@ -60,13 +71,17 @@ describe('storeProp/crud', () => {
   methods.forEach(method => {
     it(`测试${method}的添加interceptor处理request数据与response数据`, () => {
       const mockRes = {
-        code: '000000',
         data: { name: 'abc' },
       }
       const Boption = {
         name: 'user',
         [method]: {
           url: 'user/create',
+          method: fxios[({
+            create: 'post',
+            update: 'put',
+            destroy: 'delete',
+          })[method]],
           interceptor: {
             request: d => ({
               ...d,
@@ -106,7 +121,8 @@ describe('storeProp/crud', () => {
         expect(a[doing]).toBe(false)
         // eslint-disable-next-line
         expect(JSON.parse(fetchMock.lastCall()[0].body)).toEqual(
-          Boption[method].interceptor.request(data))
+          Boption[method].interceptor.request(data),
+)
         expect(res).toEqual(Boption[method].interceptor.response(mockRes))
       })
     })
@@ -114,13 +130,13 @@ describe('storeProp/crud', () => {
 
   it('测试fetch的interceptor处理request数据与response数据', () => {
     const mockRes = {
-      code: '000000',
       data: { name: 'abc' },
     }
     const Boption = {
       name: 'user',
       fetch: {
         url: 'user',
+        method: fxios.get,
         interceptor: {
           request: d => ({
             ...d,
@@ -153,7 +169,8 @@ describe('storeProp/crud', () => {
       expect(a.fetchingUser).toBe(false)
       // eslint-disable-next-line
       expect(fetchMock.lastCall()[0].url).toEqual(
-        `${config.baseURL}${Boption.fetch.url}?name=prenewUser`)
+        `${config.baseURL}${Boption.fetch.url}?name=prenewUser`,
+)
       expect(res).toEqual(Boption.fetch.interceptor.response(mockRes))
     })
   })
@@ -161,7 +178,6 @@ describe('storeProp/crud', () => {
   it('test update.url', () => {
     expect(a.updatingUser).toBe(false)
     fetchMock.put(`${config.baseURL}${option.update.url}`, {
-      code: '000000',
     })
     const p = a.updateUser({})
     expect(a.updatingUser).toBe(true)
@@ -173,7 +189,6 @@ describe('storeProp/crud', () => {
   it('test destroy.url', () => {
     expect(a.destroyingUser).toBe(false)
     fetchMock.delete(`${config.baseURL}${option.destroy.url}`, {
-      code: '000000',
     })
     const p = a.destroyUser({})
     expect(a.destroyingUser).toBe(true)
@@ -186,7 +201,6 @@ describe('storeProp/crud', () => {
     expect(a.fetchingUser).toBe(false)
     const data = { name: 'abc' }
     fetchMock.get(`${config.baseURL}${option.fetch.url}`, {
-      code: '000000',
       data,
     })
     const p = a.fetchUser({})
@@ -203,7 +217,7 @@ describe('storeProp/crud', () => {
 
   it('测试fetch返回数据中没有data的情况，则使用res赋值', () => {
     expect(a.fetchingUser).toBe(false)
-    const res = { code: '000000' }
+    const res = {}
     fetchMock.get(`${config.baseURL}${option.fetch.url}`, res)
     const p = a.fetchUser({})
     expect(a.fetchingUser).toBe(true)
@@ -215,14 +229,13 @@ describe('storeProp/crud', () => {
 
   it('fetch 指定其他method', () => {
     const mockRes = {
-      code: '000000',
       data: { name: 'abc' },
     }
     const Boption = {
       name: 'user',
       fetch: {
         url: 'user',
-        method: 'post',
+        method: fxios.post,
       },
     }
     class B {
@@ -245,21 +258,24 @@ describe('storeProp/crud', () => {
       name: 'user',
       create: {
         url: 'user',
+        method: fxios.post,
       },
       update: {
         url: 'user',
+        method: fxios.put,
       },
       destroy: {
         url: 'user',
+        method: fxios.delete,
       },
     }
     const mockRes = {
-      code: '000000',
       data: { name: 'abc' },
     }
-    fetchMock.post(`${config.baseURL}${Boption.create.url}`, mockRes)
-    fetchMock.put(`${config.baseURL}${Boption.update.url}`, mockRes)
-    fetchMock.delete(`${config.baseURL}${Boption.destroy.url}`, mockRes)
+    const url = `${config.baseURL}${Boption.create.url}`
+    fetchMock.post(url, mockRes)
+    fetchMock.put(url, mockRes)
+    fetchMock.delete(url, mockRes)
     class B {
       constructor() {
         crud.call(this, [Boption])
@@ -287,7 +303,6 @@ describe('storeProp/crud', () => {
     const b = new A()
     expect(b.user).toEqual({})
     fetchMock.post(`${config.baseURL}${option.create.url}`, {
-      code: '000000',
     })
     const bUser = { name: 'b' }
     b.setUser(bUser)
@@ -300,7 +315,6 @@ describe('storeProp/crud', () => {
     const b = new A()
     expect(b.user).toEqual({})
     fetchMock.put(`${config.baseURL}${option.update.url}`, {
-      code: '000000',
     })
     const bUser = { name: 'b' }
     b.setUser(bUser)

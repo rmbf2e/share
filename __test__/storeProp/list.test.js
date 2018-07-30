@@ -4,6 +4,7 @@ import fetchMock from 'fetch-mock'
 import router from 'share/store/router'
 import list from 'share/storeProp/list'
 import config from 'share/config'
+import fxios from 'share/util/fxios'
 
 // jest.mock('app/storeProp')
 describe('storeProp/list', () => {
@@ -11,6 +12,7 @@ describe('storeProp/list', () => {
     name: 'promotions',
     rowKey: 'id',
     url: 'promotions',
+    fetch: fxios.get,
   }
   // const fn = jest.fn()
   class A {
@@ -54,6 +56,7 @@ describe('storeProp/list', () => {
     expect(typeof pagination.showTotal).toBe('function')
     expect(typeof pagination.onChange).toBe('function')
     expect(typeof a.setPromotions).toBe('function')
+    expect(typeof a.setPromotionsLoading).toBe('function')
 
     expect('rowSelection' in tableProps).not.toBe(true)
     expect('checkedKeys' in a.promotions).not.toBe(true)
@@ -61,7 +64,15 @@ describe('storeProp/list', () => {
     expect('hasCheckedKeys' in a.promotions).not.toBe(true)
   })
 
-  it('list shape with rowSelection', () => {
+  it('测试setLoading', () => {
+    expect(a.promotions.tableProps.loading).toBe(true)
+    a.setPromotionsLoading(false)
+    expect(a.promotions.tableProps.loading).toBe(false)
+    a.setPromotionsLoading(true)
+    expect(a.promotions.tableProps.loading).toBe(true)
+  })
+
+  it('有rowSelection时的一些方法', () => {
     const { promotions } = b
     const { tableProps } = promotions
     expect(promotions.checkedKeys).toEqual([])

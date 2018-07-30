@@ -3,7 +3,7 @@ import { action, extendObservable, toJS } from 'mobx'
 import upperFirst from 'lodash/upperFirst'
 import castArray from 'lodash/castArray'
 import config from 'share/config'
-import fxios from 'share/util/fxios'
+// import fxios from 'share/util/fxios'
 import router from 'share/store/router'
 
 // 动态获取分页值
@@ -29,9 +29,10 @@ const getPage = () => {
       rowSelectionKey: 'id', // 可选，若需要选择table中的行数据，则指定，指定后可在生成的list属性中的checkedKeys数组中获取选中的key数组
       ，可从通过生成的list属性checkedRecords获取选中的对象
       processResponse: func // 可选，在列表数组不符合要求时，可对其进行预处理
+      fetch: (url, query) => Promise // func, 通常使用fxios.get
     }]
  * 则生成属性 groups(group的名词复数形式)，具体数据结构参考下面的list局部变量
- * 生成方法 fetchGroups，通过fxios从url获取数据
+ * 生成方法 fetchGroups，调用fetch属性函数并返回
  * 生成方法 setGroupsSearch方法，设置store.groups.search属性
  * 生成方法 restoreGroups，将列表数据恢复为初始状态
  *
@@ -42,10 +43,11 @@ function generateList(options) {
   castArray(options).forEach(option => {
     const { name } = option
     const upperName = upperFirst(name)
-    const fetchMethodName = `fetch${upperName}`
-    const restoreMethodName = `restore${upperName}`
-    const setSearchMethodName = `set${upperName}Search`
-    const setMethodName = `set${upperName}`
+    const fetchMethod = `fetch${upperName}`
+    const restoreMethod = `restore${upperName}`
+    const setSearchMethod = `set${upperName}Search`
+    const setMethod = `set${upperName}`
+    const setLoading = `set${upperName}Loading`
     const list = {
       search: {},
       tableProps: {
@@ -71,7 +73,6 @@ function generateList(options) {
               }),
               hash: router.location.hash,
             })
-            // this[fetchMethodName]()
           }),
           total: 0,
           showTotal: total => `共${total}条记录`,
@@ -83,7 +84,6 @@ function generateList(options) {
               }),
               hash: router.location.hash,
             })
-            // this[fetchMethodName](page)
           }),
         },
       },
@@ -105,12 +105,12 @@ function generateList(options) {
       this,
       {
         [name]: list,
-        [setSearchMethodName]: search => {
+        [setSearchMethod]: search => {
           this[name].search = search
         },
-        [fetchMethodName]: () => {
+        [fetchMethod]: () => {
           const page = getPage()
-          this[name].tableProps.loading = true
+          this[setLoading](true)
           const search = toJS(this[name].search)
           /* 将antd Table的pagination属性映射为后端需要的分页属性
           * current => page
@@ -118,21 +118,20 @@ function generateList(options) {
           * 并附加搜索参数
           * */
           this[name].tableProps.dataSource = []
-          return fxios
-            .get(option.url, {
+          return option.fetch(option.url, {
               page: page.current,
               pageSize: page.pageSize,
               // page and pageSize in search can overwrite the values above
               ...search,
             })
-            .then(this[setMethodName])
+            .then(this[setMethod])
             .finally(
               action('stopFetchListLoading', () => {
-                this[name].tableProps.loading = false
+                this[setLoading](false)
               }),
             )
         },
-        [restoreMethodName]: () => {
+        [restoreMethod]: () => {
           const observedList = this[name]
           observedList.tableProps.dataSource = []
           observedList.tableProps.pagination.current = 1
@@ -144,7 +143,7 @@ function generateList(options) {
             observedList.checkedRecords = []
           }
         },
-        [setMethodName]: data => {
+        [setMethod]: data => {
           if (option.processResponse) {
             data = option.processResponse(data)
           }
@@ -163,12 +162,16 @@ function generateList(options) {
           }
           return data
         },
+        [setLoading]: loading => {
+          this[name].tableProps.loading = loading
+        },
       },
       {
-        [setSearchMethodName]: action,
-        [fetchMethodName]: action,
-        [restoreMethodName]: action,
-        [setMethodName]: action,
+        [setSearchMethod]: action,
+        [fetchMethod]: action,
+        [restoreMethod]: action,
+        [setMethod]: action,
+        [setLoading]: action,
       },
     )
     if (option.rowSelectionKey) {

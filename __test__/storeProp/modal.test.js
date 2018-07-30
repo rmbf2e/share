@@ -1,4 +1,4 @@
-import modal from 'storeProp/modal'
+import modal from 'share/storeProp/modal'
 
 describe('storeProp/modal', () => {
   class A {
