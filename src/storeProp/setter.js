@@ -17,7 +17,7 @@ import castArray from 'lodash/castArray'
  * */
 function generateSetter(options) {
   castArray(options).forEach(option => {
-    const name = typeof option === 'string' ? option : option.name
+    const { name } = option
     const upperFirstName = upperFirst(name)
     const setMethod = `set${upperFirstName}`
     const restoreMethod = `restore${upperFirstName}`

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Tabs } from 'antd'
-import { inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 
 /*
  * 在tab切换过程中将每个TabPane的key作为hash push到history
@@ -9,6 +9,7 @@ import { inject } from 'mobx-react'
  * */
 
 @inject('store')
+@observer
 export default class TabsMemoryByHash extends Component {
   static TabPane = Tabs.TabPane
 
@@ -28,8 +29,10 @@ export default class TabsMemoryByHash extends Component {
 
   onChangeTab = key => {
     const {
-      router: { location, push },
-    } = this.props.store
+      store: {
+        router: { location, push },
+      },
+    } = this.props
     push({
       search: location.search,
       hash: key,
@@ -44,8 +47,10 @@ export default class TabsMemoryByHash extends Component {
     const props = { ...this.props }
     props.onChange = this.onChangeTab
     const {
-      router: { location },
-    } = this.props.store
+      store: {
+        router: { location },
+      },
+    } = this.props
     if (location.hash) {
       props.defaultActiveKey = location.hash.slice(1)
     }

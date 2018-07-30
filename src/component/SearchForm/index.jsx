@@ -1,10 +1,11 @@
-import url from 'url'
+import URL from 'url'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Button } from 'antd'
 import forEach from 'lodash/forEach'
 import reduce from 'lodash/reduce'
 import isEmptyQuery from 'share/util/isEmptyQuery'
+import config from 'share/config'
 import { parseMoment, formatMoment } from 'share/util/moment'
 
 /*
@@ -39,13 +40,11 @@ export default class SearchForm extends React.Component {
     children: PropTypes.node.isRequired,
     onSubmit: PropTypes.func.isRequired,
     withPagination: PropTypes.bool,
-    pageSize: PropTypes.number,
   }
 
   // 默认提交时带分页参数
   static defaultProps = {
     withPagination: true,
-    pageSize: 0,
   }
 
   // 从querystring上取值并回填回表单
@@ -108,7 +107,6 @@ export default class SearchForm extends React.Component {
       store: {
         router: { push, location, query },
       },
-      pageSize,
       withPagination,
     } = this.props
     const formValues = form.getFieldsValue()
@@ -129,10 +127,10 @@ export default class SearchForm extends React.Component {
     const values = this.compactFormValues(formValues)
     if (withPagination) {
       values.page = 1
-      values.pageSize = query.pageSize || pageSize
+      values.pageSize = query.pageSize || config.pageSize
     }
     push({
-      search: url.format({ query: { ...query, ...values } }),
+      search: URL.format({ query: { ...query, ...values } }),
       hash: location.hash,
     })
   }
@@ -161,7 +159,6 @@ export default class SearchForm extends React.Component {
       onSubmit,
       children,
       withPagination,
-      pageSize,
       ...props
     } = this.props
     return (

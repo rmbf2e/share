@@ -1,12 +1,12 @@
-import getParentKeys from 'util/getParentKeys'
-import pullParentKey from 'util/pullParentKey'
-import getDescendantKeys from 'util/getDescendantKeys'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { toJS } from 'mobx'
 import { Tree } from 'antd'
 import uniq from 'lodash/uniq'
 import pull from 'lodash/pull'
+import removeEmptyParentKey from 'share/util/removeEmptyParentKey'
+import getDescendantKeys from 'share/util/getDescendantKeys'
+import getParentKeys from 'share/util/getParentKeys'
 
 const { TreeNode } = Tree
 
@@ -40,9 +40,10 @@ export default class CheckedTree extends React.Component {
     } else {
       pull(checkedKeys, ...descendentKeys)
       // 通过取交集查看上级key是否在选中之内，没有则删除
-      pullParentKey(data, checkedKeys)
+      checkedKeys = removeEmptyParentKey(data, checkedKeys)
     }
-    this.props.onCheck(uniq(checkedKeys))
+    const { onCheck } = this.props
+    onCheck(uniq(checkedKeys))
   }
 
   renderTreeNodes = data => {
@@ -66,16 +67,17 @@ export default class CheckedTree extends React.Component {
   }
 
   render() {
+    const { checkedKeys, data } = this.props
     return (
       <Tree
         onCheck={this.onCheck}
-        checkedKeys={this.props.checkedKeys}
+        checkedKeys={checkedKeys}
         selectable={false}
         checkable
         defaultExpandAll
         checkStrictly
       >
-        {this.renderTreeNodes(this.props.data)}
+        {this.renderTreeNodes(data)}
       </Tree>
     )
   }

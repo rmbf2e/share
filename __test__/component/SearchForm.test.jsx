@@ -8,8 +8,7 @@ import {
 } from 'antd'
 import SearchForm from 'share/component/SearchForm'
 import router from 'share/store/router'
-
-const pageSize = 20
+import config from 'share/config'
 
 const searchForm = {
   query: {},
@@ -22,7 +21,6 @@ const Comp = props => {
   return (
     <SearchForm
       {...props}
-      pageSize={pageSize}
       store={{
         router,
         searchForm,
@@ -59,7 +57,7 @@ describe('components/SearchForm', () => {
     expect(router.query).toEqual({
       firstName: 'first',
       page: '1',
-      pageSize: String(pageSize),
+      pageSize: String(config.pageSize),
     })
     expect(router.location.hash).toBe(hash)
     // expect(form).toHaveText('搜索')
