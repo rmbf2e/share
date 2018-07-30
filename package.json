@@ -4,7 +4,8 @@
   "description": "shared components and utils for the great RMB frontend group",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "coverage": "jest --coverage && node jest/openCoverage.js"
   },
   "keywords": [],
   "author": "wangfan15@jd.com",
@@ -51,6 +52,7 @@
     "mobx-react": "^5.2.3",
     "mobx-react-router": "^4.0.4",
     "moment": "^2.22.2",
+    "opn": "^5.3.0",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1"
