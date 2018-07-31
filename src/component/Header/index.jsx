@@ -11,6 +11,7 @@ const { Header } = Layout
 @observer
 export default class AppHeader extends React.Component {
   static propTypes = {
+    title: PropTypes.string,
     store: PropTypes.shape({
       user: PropTypes.shape({
         fetchMe: PropTypes.func,
@@ -24,18 +25,20 @@ export default class AppHeader extends React.Component {
 
   static defaultProps = {
     children: null,
+    title: '',
   }
 
   render() {
     const {
       store: { user },
       children,
+      title,
     } = this.props
     return (
       <Header className={s.header}>
         <figure className={s.logo}>
           <img alt="logo" src="/asset/image/logo.png" />
-          权限统一管理平台
+          {title}
         </figure>
         <Menu />
         {children}

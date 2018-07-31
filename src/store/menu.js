@@ -18,8 +18,7 @@ class Sider {
   }
 
   // sider默认折叠
-  @observable
-  collapsed = config.siderCollapsed
+  @observable collapsed = config.siderCollapsed
 
   @action
   toggle = () => {
@@ -31,16 +30,21 @@ class Sider {
   }
 }
 
+@storeProp({
+  // 定义menus属性与setMenus方法
+  setter: [
+    {
+      name: 'menus',
+      default: [],
+    },
+  ],
+})
 class Menu {
-  menus = []
-
   sider = new Sider(this)
 
-  @observable
-  selectedKeys = []
+  @observable selectedKeys = []
 
-  @observable
-  openKeys = []
+  @observable openKeys = []
 
   // 设置当前激活状态的菜单
   // 在监听路由切换时调用

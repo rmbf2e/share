@@ -15,7 +15,6 @@ export default class Menus extends React.Component {
 
   static propTypes = {
     store: PropTypes.shape({
-      sider: PropTypes.object,
       menu: PropTypes.object,
       router: PropTypes.object,
     }).isRequired,
@@ -44,11 +43,11 @@ export default class Menus extends React.Component {
     const {
       store: {
         menu,
-        sider,
         router: { push },
       },
     } = this.props
     const menus = toJS(menu.menus)
+    const { sider } = menu
     if (sider.collapsed) {
       return menus.map(topMenu => (
         <SubMenu key={topMenu.name} title={topMenu.name}>

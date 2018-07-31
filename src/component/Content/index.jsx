@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import { AnimatedSwitch } from 'react-router-transition'
 import { Switch } from 'react-router-dom'
 import { Layout } from 'antd'
-import Loading from 'component/Loading'
-import router from 'app/router'
+import Loading from 'share/component/Loading'
 import s from './style.m.less'
 
 const { Content } = Layout
@@ -31,7 +30,7 @@ const transition = {
   },
 }
 
-const AppContent = ({ loading }) => {
+const AppContent = ({ loading, children }) => {
   const content = loading ? (
     <Loading />
   ) : (
@@ -44,19 +43,25 @@ const AppContent = ({ loading }) => {
         mapStyles={mapStyles}
         className={s.animateWrapper}
       >
-        {router}
+        {children}
       </AnimatedSwitch>
     </Switch>
   )
-  return <Content id="appContent">{content}</Content>
+  return (
+    <Content id="appContent">
+      {content}
+    </Content>
+)
 }
 
 AppContent.propTypes = {
   loading: PropTypes.bool,
+  children: PropTypes.node,
 }
 
 AppContent.defaultProps = {
   loading: true,
+  children: null,
 }
 
 export default AppContent

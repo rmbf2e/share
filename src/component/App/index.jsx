@@ -1,16 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Layout, notification, LocaleProvider } from 'antd'
+import { notification, LocaleProvider } from 'antd'
 import { Provider } from 'mobx-react'
 import { Router } from 'react-router-dom'
 import zhCN from 'antd/lib/locale-provider/zh_CN'
 import fxios from 'share/util/fxios'
-// import store from 'app/store'
-import Header from 'share/component/Header'
-import Content from 'share/component/Content'
-import Sider from 'share/component/Sider'
-// import { history } from 'share/store/router'
-// import s from './style.m.less'
 
 // 监听后端接口错误函数
 const onApiError = error => {
@@ -37,32 +31,12 @@ class App extends React.PureComponent {
     store: PropTypes.shape({
       app: PropTypes.object,
     }).isRequired,
-    Header: PropTypes.func,
-    Sider: PropTypes.func,
-    Content: PropTypes.func,
-  }
-
-  static defaultProps = {
-    Header: null,
-    Sider: null,
-    Content: null,
-  }
-
-  state = {
-    loadingMeta: true,
+    children: PropTypes.node.isRequired,
   }
 
   componentDidMount() {
-    const {
-      store: { app },
-    } = this.props
     fxios.on('error', onApiError)
     fxios.on('success', onApiSuccess)
-    app.load().then(() => {
-      this.setState({
-        loadingMeta: false,
-      })
-    })
   }
 
   // 解除监听接口错误
@@ -81,30 +55,15 @@ class App extends React.PureComponent {
   }
 
   render() {
-    const { loadingMeta } = this.state
-    const {
-      store,
-      Header: PropHeader,
-      Content: PropContent,
-      Sider: PropSider,
-    } = this.props
+    const { store, children } = this.props
     const {
       router: { history },
     } = store
-    const AppHeader = PropHeader || Header
-    const AppSider = PropSider || Sider
-    const AppContent = PropContent || Content
     return (
       <Provider store={store}>
         <LocaleProvider locale={zhCN}>
           <Router history={history}>
-            <Layout>
-              <AppHeader />
-              <Layout>
-                <AppSider />
-                <AppContent loading={loadingMeta} />
-              </Layout>
-            </Layout>
+            {children}
           </Router>
         </LocaleProvider>
       </Provider>
