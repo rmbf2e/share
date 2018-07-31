@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { toJS } from 'mobx'
-// import { Tree } from 'antd'
-import Tree from 'antd/lib/tree'
+import { Tree } from 'antd'
 import uniq from 'lodash/uniq'
 import pull from 'lodash/pull'
 import removeEmptyParentKey from 'share/util/removeEmptyParentKey'
@@ -15,11 +14,13 @@ export default class CheckedTree extends React.Component {
   static TreeNode = TreeNode
 
   static propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
         key: PropTypes.string,
         title: PropTypes.string,
         checked: PropTypes.bool,
-      })).isRequired,
+      }),
+    ).isRequired,
     onCheck: PropTypes.func.isRequired,
     checkedKeys: PropTypes.arrayOf(PropTypes.string),
     disabledKeys: PropTypes.arrayOf(PropTypes.string),
