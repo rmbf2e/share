@@ -2,5 +2,31 @@
   "presets": ["react", "env", "stage-0"],
   "plugins": [
     "transform-decorators-legacy"
-  ]
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        [
+          'import',
+          {
+            "libraryName": "antd",
+            "style": true,
+          },
+          "transform-runtime"
+        ]
+      ]
+    },
+    "production": {
+      "plugins": [
+        [
+          'import',
+          {
+            "libraryName": "antd",
+            "style": true,
+          },
+          "transform-runtime"
+        ]
+      ]
+    }
+  }
 }
