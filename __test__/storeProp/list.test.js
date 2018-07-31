@@ -12,7 +12,7 @@ describe('storeProp/list', () => {
     name: 'promotions',
     rowKey: 'id',
     url: 'promotions',
-    fetch: fxios.get,
+    request: fxios.get,
   }
   // const fn = jest.fn()
   class A {
@@ -146,9 +146,11 @@ describe('storeProp/list', () => {
         query: { page: 1, pageSize: config.pageSize },
       })
       fetchMock.get(u, data)
-      expect(b.promotions.tableProps.rowSelection.getCheckboxProps({
+      expect(
+        b.promotions.tableProps.rowSelection.getCheckboxProps({
           id: 2222,
-        })).toBe(2222)
+        }),
+      ).toBe(2222)
       return b.fetchPromotions().then(() => {
         const { tableProps } = b.promotions
         expect(tableProps.dataSource).toEqual(data.dataSource)
@@ -205,7 +207,9 @@ describe('storeProp/list', () => {
       expect(router.query.pageSize).toBe('29')
       expect(config.pageSize).toBe(29)
       expect(router.query.page).toBe('1')
-      expect(a.promotions.tableProps.pagination.showTotal(123)).toBe('共123条记录')
+      expect(a.promotions.tableProps.pagination.showTotal(123)).toBe(
+        '共123条记录',
+      )
       expect(a.promotions.tableProps.pagination.page).toBe(1)
       router.push('/')
     })

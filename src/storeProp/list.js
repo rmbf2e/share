@@ -29,10 +29,10 @@ const getPage = () => {
       rowSelectionKey: 'id', // 可选，若需要选择table中的行数据，则指定，指定后可在生成的list属性中的checkedKeys数组中获取选中的key数组
       ，可从通过生成的list属性checkedRecords获取选中的对象
       processResponse: func // 可选，在列表数组不符合要求时，可对其进行预处理
-      fetch: (url, query) => Promise // func, 通常使用fxios.get
+      request: (url, query) => Promise // func, 通常使用fxios.get
     }]
  * 则生成属性 groups(group的名词复数形式)，具体数据结构参考下面的list局部变量
- * 生成方法 fetchGroups，调用fetch属性函数并返回
+ * 生成方法 fetchGroups，调用request属性函数并返回
  * 生成方法 setGroupsSearch方法，设置store.groups.search属性
  * 生成方法 restoreGroups，将列表数据恢复为初始状态
  *
@@ -118,7 +118,7 @@ function generateList(options) {
           * 并附加搜索参数
           * */
           this[name].tableProps.dataSource = []
-          return option.fetch(option.url, {
+          return option.request(option.url, {
               page: page.current,
               pageSize: page.pageSize,
               // page and pageSize in search can overwrite the values above
