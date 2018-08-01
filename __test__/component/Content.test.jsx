@@ -7,22 +7,27 @@ import Loading from 'share/component/Loading'
 import RouterStore from 'share/store/router'
 
 const router = new RouterStore()
-const store = { router }
+
+const ContentWrapper = ({ loading }) => (
+  <Router history={router.history}>
+    <Content loading={loading} />
+  </Router>
+)
 
 describe('component/Content', () => {
   it('测试包含Loading', () => {
-    const com = mount(<Content loading store={store} />)
+    const com = mount(<ContentWrapper loading />)
     expect(com.find(Loading)).toHaveLength(1)
     expect(com.find(AnimatedSwitch)).toHaveLength(0)
-    expect(com.find(Router)).toHaveLength(0)
     expect(com.find(Switch)).toHaveLength(0)
+    com.unmount()
   })
 
   it('测试包含AnimatedSwitch, Switch', () => {
-    const com = mount(<Content loading={false} store={store} />)
+    const com = mount(<ContentWrapper loading={false} />)
     expect(com.find(Loading)).toHaveLength(0)
     expect(com.find(AnimatedSwitch)).toHaveLength(1)
-    expect(com.find(Router)).toHaveLength(1)
     expect(com.find(Switch)).toHaveLength(1)
+    com.unmount()
   })
 })

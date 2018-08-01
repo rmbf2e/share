@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { AnimatedSwitch } from 'react-router-transition'
-import { Switch, Router } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import { Layout } from 'antd'
 import Loading from 'share/component/Loading'
 import s from './style.m.less'
@@ -30,27 +30,22 @@ const transition = {
   },
 }
 
-const AppContent = ({ loading, children, store }) => {
-  const {
-    router: { history },
-  } = store
+const AppContent = ({ loading, children }) => {
   const content = loading ? (
     <Loading />
   ) : (
-    <Router history={history}>
-      <Switch>
-        <AnimatedSwitch
-          id="animateWrapper"
-          atEnter={transition.atEnter}
-          atLeave={transition.atLeave}
-          atActive={transition.atActive}
-          mapStyles={mapStyles}
-          className={s.animateWrapper}
-        >
-          {children}
-        </AnimatedSwitch>
-      </Switch>
-    </Router>
+    <Switch>
+      <AnimatedSwitch
+        id="animateWrapper"
+        atEnter={transition.atEnter}
+        atLeave={transition.atLeave}
+        atActive={transition.atActive}
+        mapStyles={mapStyles}
+        className={s.animateWrapper}
+      >
+        {children}
+      </AnimatedSwitch>
+    </Switch>
   )
   return (
     <Content id="appContent">
@@ -62,9 +57,6 @@ const AppContent = ({ loading, children, store }) => {
 AppContent.propTypes = {
   loading: PropTypes.bool,
   children: PropTypes.node,
-  store: PropTypes.shape({
-    router: PropTypes.object,
-  }).isRequired,
 }
 
 AppContent.defaultProps = {

@@ -2,6 +2,7 @@ import React from 'react'
 import { mount } from 'enzyme'
 import { notification, LocaleProvider } from 'antd'
 import { Provider } from 'mobx-react'
+import { Router } from 'react-router-dom'
 import App from 'share/component/App'
 import RouterStore from 'share/store/router'
 import fxios from 'share/util/fxios'
@@ -48,6 +49,7 @@ describe('测试App', () => {
     const com = mount(<TestApp />)
     expect(com.find(LocaleProvider)).toHaveLength(1)
     expect(com.find(Provider)).toHaveLength(1)
+    expect(com.find(Router)).toHaveLength(1)
     com.unmount()
   })
 
