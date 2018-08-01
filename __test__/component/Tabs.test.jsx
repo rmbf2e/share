@@ -11,8 +11,9 @@ syncHistoryWithStore(appHistory, routerStore)
 
 const { TabPane } = Tabs
 
+const onChange = jest.fn()
 const App = (
-  <Tabs store={{ router: routerStore }}>
+  <Tabs onChange={onChange} store={{ router: routerStore }}>
     <TabPane tab="One" key="one">
       One
     </TabPane>
@@ -40,5 +41,19 @@ describe('components/Tabs', () => {
     })
     app = mount(App)
     expect(app.find('.ant-tabs-tab-active').text()).toBe('Two')
+    app.unmount()
+  })
+
+  it('测试onChange prop', () => {
+    onChange.mockClear()
+    appHistory.push({
+      hash: 'two',
+    })
+    const app = mount(App)
+    expect(onChange).not.toHaveBeenCalled()
+    const tabTitle = app.find('.ant-tabs-tab').at(0)
+    tabTitle.simulate('click')
+    expect(onChange).toHaveBeenCalledWith('one')
+    app.unmount()
   })
 })

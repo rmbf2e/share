@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { notification, LocaleProvider } from 'antd'
 import { Provider } from 'mobx-react'
-import { Router } from 'react-router-dom'
 import zhCN from 'antd/lib/locale-provider/zh_CN'
 import fxios from 'share/util/fxios'
 
@@ -29,7 +28,7 @@ const onApiSuccess = (res, req) => {
 class App extends React.PureComponent {
   static propTypes = {
     store: PropTypes.shape({
-      app: PropTypes.object,
+      router: PropTypes.object,
     }).isRequired,
     children: PropTypes.node.isRequired,
   }
@@ -56,15 +55,10 @@ class App extends React.PureComponent {
 
   render() {
     const { store, children } = this.props
-    const {
-      router: { history },
-    } = store
     return (
       <Provider store={store}>
         <LocaleProvider locale={zhCN}>
-          <Router history={history}>
-            {children}
-          </Router>
+          {children}
         </LocaleProvider>
       </Provider>
     )

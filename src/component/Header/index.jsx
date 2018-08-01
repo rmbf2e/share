@@ -1,23 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Layout } from 'antd'
-import { observer, inject } from 'mobx-react'
-// import Menu from 'share/component/Menu'
+// import { observer, inject } from 'mobx-react'
 import s from './style.m.less'
 
 const { Header } = Layout
 
-@inject('store')
-@observer
-export default class AppHeader extends React.Component {
+export default class AppHeader extends React.PureComponent {
   static propTypes = {
     store: PropTypes.shape({
       app: PropTypes.shape({
         logout: PropTypes.func,
         me: PropTypes.object,
-      }),
-      router: PropTypes.shape({
-        location: PropTypes.object,
       }),
     }).isRequired,
     children: PropTypes.node,
