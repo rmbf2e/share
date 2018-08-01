@@ -4,7 +4,9 @@ import upperFirst from 'lodash/upperFirst'
 import castArray from 'lodash/castArray'
 import config from 'share/config'
 import fxios from 'share/util/fxios'
-import router from 'share/store/router'
+import RouterStore from 'share/store/router'
+
+const router = new RouterStore()
 
 // 动态获取分页值
 const getPage = () => {

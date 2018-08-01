@@ -1,35 +1,35 @@
 // import fetch from 'util/fetch'
 import { toJS } from 'mobx'
 import fetchMock from 'fetch-mock'
-import crud from 'share/storeProp/crud'
+import rest from 'share/storeProp/rest'
 import config from 'share/config'
 import fxios from 'share/util/fxios'
 
-describe('storeProp/crud', () => {
+describe('storeProp/rest', () => {
   // const host = 'http://localhost'
   const option = {
     name: 'user',
     default: {},
     create: {
       url: 'user/create',
-      method: fxios.post,
+      // request: fxios.post,
     },
     update: {
       url: 'user/update',
-      method: fxios.put,
+      // request: fxios.put,
     },
     destroy: {
       url: 'user/destroy',
-      method: fxios.delete,
+      // request: fxios.delete,
     },
     fetch: {
       url: 'user/fetch',
-      method: fxios.get,
+      // request: fxios.get,
     },
   }
   class A {
     constructor() {
-      crud.call(this, [option])
+      rest.call(this, [option])
     }
   }
   const a = new A()
@@ -41,8 +41,7 @@ describe('storeProp/crud', () => {
   })
 
   it('test create.url与createingUser', () => {
-    fetchMock.post(`${config.baseURL}${option.create.url}`, {
-    })
+    fetchMock.post(`${config.baseURL}${option.create.url}`, {})
     expect(a.creatingUser).toBe(false)
     const p = a.createUser({})
     expect(a.creatingUser).toBe(true)
@@ -77,11 +76,6 @@ describe('storeProp/crud', () => {
         name: 'user',
         [method]: {
           url: 'user/create',
-          method: fxios[({
-            create: 'post',
-            update: 'put',
-            destroy: 'delete',
-          })[method]],
           interceptor: {
             request: d => ({
               ...d,
@@ -102,7 +96,7 @@ describe('storeProp/crud', () => {
       fetchMock.delete(`${config.baseURL}${Boption[method].url}`, mockRes)
       class B {
         constructor() {
-          crud.call(this, [Boption])
+          rest.call(this, [Boption])
         }
       }
       const b = new B()
@@ -122,7 +116,7 @@ describe('storeProp/crud', () => {
         // eslint-disable-next-line
         expect(JSON.parse(fetchMock.lastCall()[0].body)).toEqual(
           Boption[method].interceptor.request(data),
-)
+        )
         expect(res).toEqual(Boption[method].interceptor.response(mockRes))
       })
     })
@@ -136,7 +130,6 @@ describe('storeProp/crud', () => {
       name: 'user',
       fetch: {
         url: 'user',
-        method: fxios.get,
         interceptor: {
           request: d => ({
             ...d,
@@ -158,7 +151,7 @@ describe('storeProp/crud', () => {
     )
     class B {
       constructor() {
-        crud.call(this, [Boption])
+        rest.call(this, [Boption])
       }
     }
     const b = new B()
@@ -170,15 +163,14 @@ describe('storeProp/crud', () => {
       // eslint-disable-next-line
       expect(fetchMock.lastCall()[0].url).toEqual(
         `${config.baseURL}${Boption.fetch.url}?name=prenewUser`,
-)
+      )
       expect(res).toEqual(Boption.fetch.interceptor.response(mockRes))
     })
   })
 
   it('test update.url', () => {
     expect(a.updatingUser).toBe(false)
-    fetchMock.put(`${config.baseURL}${option.update.url}`, {
-    })
+    fetchMock.put(`${config.baseURL}${option.update.url}`, {})
     const p = a.updateUser({})
     expect(a.updatingUser).toBe(true)
     return p.then(() => {
@@ -188,8 +180,7 @@ describe('storeProp/crud', () => {
 
   it('test destroy.url', () => {
     expect(a.destroyingUser).toBe(false)
-    fetchMock.delete(`${config.baseURL}${option.destroy.url}`, {
-    })
+    fetchMock.delete(`${config.baseURL}${option.destroy.url}`, {})
     const p = a.destroyUser({})
     expect(a.destroyingUser).toBe(true)
     return p.then(() => {
@@ -235,12 +226,12 @@ describe('storeProp/crud', () => {
       name: 'user',
       fetch: {
         url: 'user',
-        method: fxios.post,
+        request: fxios.post,
       },
     }
     class B {
       constructor() {
-        crud.call(this, [Boption])
+        rest.call(this, [Boption])
       }
     }
     const b = new B()
@@ -258,15 +249,12 @@ describe('storeProp/crud', () => {
       name: 'user',
       create: {
         url: 'user',
-        method: fxios.post,
       },
       update: {
         url: 'user',
-        method: fxios.put,
       },
       destroy: {
         url: 'user',
-        method: fxios.delete,
       },
     }
     const mockRes = {
@@ -278,7 +266,7 @@ describe('storeProp/crud', () => {
     fetchMock.delete(url, mockRes)
     class B {
       constructor() {
-        crud.call(this, [Boption])
+        rest.call(this, [Boption])
       }
 
       emit = fn
@@ -302,8 +290,7 @@ describe('storeProp/crud', () => {
   it('测试create之后会恢复default', async () => {
     const b = new A()
     expect(b.user).toEqual({})
-    fetchMock.post(`${config.baseURL}${option.create.url}`, {
-    })
+    fetchMock.post(`${config.baseURL}${option.create.url}`, {})
     const bUser = { name: 'b' }
     b.setUser(bUser)
     expect(b.user).toEqual(bUser)
@@ -314,8 +301,7 @@ describe('storeProp/crud', () => {
   it('测试update之后会恢复default', async () => {
     const b = new A()
     expect(b.user).toEqual({})
-    fetchMock.put(`${config.baseURL}${option.update.url}`, {
-    })
+    fetchMock.put(`${config.baseURL}${option.update.url}`, {})
     const bUser = { name: 'b' }
     b.setUser(bUser)
     expect(b.user).toEqual(bUser)

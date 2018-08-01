@@ -1,10 +1,12 @@
 import url from 'url'
 // import { toJS } from 'mobx'
 import fetchMock from 'fetch-mock'
-import router from 'share/store/router'
+import RouterStore from 'share/store/router'
 import list from 'share/storeProp/list'
 import config from 'share/config'
 import fxios from 'share/util/fxios'
+
+const router = new RouterStore()
 
 // jest.mock('app/storeProp')
 describe('storeProp/list', () => {

@@ -2,18 +2,28 @@
 import url from 'url'
 import createBrowserHistory from 'history/createBrowserHistory'
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
-import { extendObservable } from 'mobx'
+import { computed } from 'mobx'
 
-const routerStore = new RouterStore()
-const appHistory = createBrowserHistory()
-export const history = syncHistoryWithStore(appHistory, routerStore)
+// 单例模式，全局只需要一个router即可
+let instance = null
 
-// 扩展query属性方便获取url上的querystring
-extendObservable(routerStore, {
+class Router extends RouterStore {
+  constructor() {
+    super()
+    if (instance) {
+      return instance
+    }
+    const appHistory = createBrowserHistory()
+    syncHistoryWithStore(appHistory, this)
+    instance = this
+  }
+
+  // 扩展query属性方便获取url上的querystring
+  @computed
   get query() {
     const { search } = this.location
     return search ? url.parse(search, true).query : {}
-  },
-})
+  }
+}
 
-export default routerStore
+export default Router

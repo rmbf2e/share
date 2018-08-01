@@ -1,12 +1,10 @@
-@hover-height: @layout-header-height * 2;
-
 .header {
   display: flex;
   // position: fixed;
   // z-index: 1;
   align-items: flex-start;
   // width: 100%;
-  transition: all 0.3s;
+  // transition: all 0.3s;
   border-bottom: none;
   :global {
     .ant-menu-horizontal {
@@ -17,28 +15,8 @@
       line-height: inherit;
     }
   }
-  &:hover {
-    height: @hover-height + 2px;
-    line-height: @hover-height;
-    :global {
-      .ant-form-item-control,
-      .ant-form-item-label {
-        line-height: @hover-height;
-      }
-    }
-  }
 }
 
-.logo {
-  // height: @layout-header-height;
-  margin: 0 2em 0 0;
-  font-size: 2em;
-  // line-height: @layout-header-height;
-  img {
-    width: 1.3em;
-    margin-right: 1em;
-  }
-}
 .me {
   position: absolute;
   right: 0;

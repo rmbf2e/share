@@ -1,7 +1,7 @@
 import forEach from 'lodash/forEach'
 import modal from './modal'
 import list from './list'
-import crud from './crud'
+import rest from './rest'
 import setter from './setter'
 
 // 自动将storeProp文件夹里的所有文件加载为生成器
@@ -18,7 +18,7 @@ import setter from './setter'
 const generators = {
   modal,
   list,
-  crud,
+  rest,
   setter,
 }
 

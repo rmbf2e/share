@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Layout } from 'antd'
 import { observer, inject } from 'mobx-react'
-import Menu from 'share/component/Menu'
+// import Menu from 'share/component/Menu'
 import s from './style.m.less'
 
 const { Header } = Layout
@@ -11,10 +11,10 @@ const { Header } = Layout
 @observer
 export default class AppHeader extends React.Component {
   static propTypes = {
-    title: PropTypes.string,
     store: PropTypes.shape({
-      user: PropTypes.shape({
-        fetchMe: PropTypes.func,
+      app: PropTypes.shape({
+        logout: PropTypes.func,
+        me: PropTypes.object,
       }),
       router: PropTypes.shape({
         location: PropTypes.object,
@@ -25,26 +25,19 @@ export default class AppHeader extends React.Component {
 
   static defaultProps = {
     children: null,
-    title: '',
   }
 
   render() {
     const {
-      store: { user },
+      store: { app },
       children,
-      title,
     } = this.props
     return (
       <Header className={s.header}>
-        <figure className={s.logo}>
-          <img alt="logo" src="/asset/image/logo.png" />
-          {title}
-        </figure>
-        <Menu />
         {children}
         <figure className={s.me}>
-          {user.me.name}
-          <a onClick={user.logout} onKeyPress={user.logout}>
+          {app.me.name}
+          <a onClick={app.logout} onKeyPress={app.logout}>
             注销
           </a>
         </figure>

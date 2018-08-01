@@ -1,6 +1,7 @@
 import { action, extendObservable, observable } from 'mobx'
 import upperFirst from 'lodash/upperFirst'
 import castArray from 'lodash/castArray'
+import fxios from 'share/util/fxios'
 
 /*
  * 生成以命名为核心的添删改方法与相关的请求状态属性
@@ -9,7 +10,7 @@ import castArray from 'lodash/castArray'
  *   default: {},
  *   create: {
  *     url: '/groups/create', // required
- *     method: fxios.post,
+ *     request: fxios.post, // 可以不指定，默认按restfull接口规则
  *     interceptor: {
  *       request: (data) => {..}, // 预处理发送data
  *       response: (data) => {..}, // 处理接口返回data
@@ -26,7 +27,7 @@ import castArray from 'lodash/castArray'
  * @param {Array} options
  * @return void
  * */
-function crud(options) {
+function rest(options) {
   castArray(options).forEach(option => {
     const { name } = option
     const upperName = upperFirst(name)
@@ -47,21 +48,24 @@ function crud(options) {
         if (create.interceptor && create.interceptor.request) {
           data = create.interceptor.request(data)
         }
-        const promise = option.create.method({ url: create.url, param }, data).then(res => {
-            if (this.emit) {
-              this.emit(`${name}:changed`)
-            }
-            if (option.default) {
-              this[setMethod](option.default)
-            }
-            if (create.interceptor && create.interceptor.response) {
-              return create.interceptor.response(res)
-            }
-            return res
-          })
-        promise.finally(action(createMethod, () => {
+        const request = option.create.request || fxios.post
+        const promise = request({ url: create.url, param }, data).then(res => {
+          if (this.emit) {
+            this.emit(`${name}:changed`)
+          }
+          if (option.default) {
+            this[setMethod](option.default)
+          }
+          if (create.interceptor && create.interceptor.response) {
+            return create.interceptor.response(res)
+          }
+          return res
+        })
+        promise.finally(
+          action(createMethod, () => {
             this[creating] = false
-          }))
+          }),
+        )
         return promise
       }
       decoratorObject[createMethod] = action
@@ -76,21 +80,24 @@ function crud(options) {
         if (update.interceptor && update.interceptor.request) {
           data = update.interceptor.request(data)
         }
-        const promise = option.update.method({ url: update.url, param }, data).then(res => {
-            if (this.emit) {
-              this.emit(`${name}:changed`)
-            }
-            if (option.default) {
-              this[setMethod](option.default)
-            }
-            if (update.interceptor && update.interceptor.response) {
-              return update.interceptor.response(res)
-            }
-            return res
-          })
-        promise.finally(action(updateMethod, () => {
+        const request = option.update.request || fxios.put
+        const promise = request({ url: update.url, param }, data).then(res => {
+          if (this.emit) {
+            this.emit(`${name}:changed`)
+          }
+          if (option.default) {
+            this[setMethod](option.default)
+          }
+          if (update.interceptor && update.interceptor.response) {
+            return update.interceptor.response(res)
+          }
+          return res
+        })
+        promise.finally(
+          action(updateMethod, () => {
             this[updating] = false
-          }))
+          }),
+        )
         return promise
       }
       decoratorObject[updateMethod] = action
@@ -105,18 +112,21 @@ function crud(options) {
         if (destroy.interceptor && destroy.interceptor.request) {
           data = destroy.interceptor.request(data)
         }
-        const promise = option.destroy.method({ url: destroy.url, param }, data).then(res => {
-            if (this.emit) {
-              this.emit(`${name}:changed`)
-            }
-            if (destroy.interceptor && destroy.interceptor.response) {
-              return destroy.interceptor.response(res)
-            }
-            return res
-          })
-        promise.finally(action(destroyMethod, () => {
+        const request = option.destroy.request || fxios.delete
+        const promise = request({ url: destroy.url, param }, data).then(res => {
+          if (this.emit) {
+            this.emit(`${name}:changed`)
+          }
+          if (destroy.interceptor && destroy.interceptor.response) {
+            return destroy.interceptor.response(res)
+          }
+          return res
+        })
+        promise.finally(
+          action(destroyMethod, () => {
             this[destroying] = false
-          }))
+          }),
+        )
         return promise
       }
       decoratorObject[destroyMethod] = action
@@ -138,10 +148,15 @@ function crud(options) {
         if (fetchObj.interceptor && fetchObj.interceptor.request) {
           query = fetchObj.interceptor.request(query)
         }
-        const promise = option.fetch.method({ url: fetchObj.url, param }, query).then(setAction)
-        promise.finally(action(fetchMethod, () => {
+        const request = option.fetch.request || fxios.get
+        const promise = request({ url: fetchObj.url, param }, query).then(
+          setAction,
+        )
+        promise.finally(
+          action(fetchMethod, () => {
             this[fetching] = false
-          }))
+          }),
+        )
         return promise
       }
       decoratorObject[fetchMethod] = action
@@ -152,4 +167,4 @@ function crud(options) {
   })
 }
 
-export default crud
+export default rest

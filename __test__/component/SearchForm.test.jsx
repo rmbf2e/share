@@ -7,8 +7,10 @@ import {
  Input, Form, DatePicker, TimePicker,
 } from 'antd'
 import SearchForm from 'share/component/SearchForm'
-import router from 'share/store/router'
+import RouterStore from 'share/store/router'
 import config from 'share/config'
+
+const router = new RouterStore()
 
 const searchForm = {
   query: {},
@@ -145,19 +147,23 @@ describe('components/SearchForm', () => {
     expect(router.query).toEqual(originValues)
     const submit = jest.fn(() => Promise.resolve())
     const form = mount(<WrappedForm onSubmit={submit} withPagination={false} />)
-    expect(form
+    expect(
+      form
         .instance()
         .getForm()
-        .getFieldsValue()).toEqual(originValues)
+        .getFieldsValue(),
+    ).toEqual(originValues)
     originValues.firstName = 'xxxxxxxx'
     originValues.secondName = 'yyyyyyyyyy'
     router.push({
       search: url.format({ query: originValues }),
     })
-    expect(form
+    expect(
+      form
         .instance()
         .getForm()
-        .getFieldsValue()).toEqual(originValues)
+        .getFieldsValue(),
+    ).toEqual(originValues)
   })
 
   it('测试日期类型的表单参数', () => {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Menu } from 'antd'
 import { observer, inject } from 'mobx-react'
 import getFirstPathname from 'share/util/getFirstPathname'
-// import Link from './Link'
+import Link from './Link'
 
 const { SubMenu } = Menu
 
@@ -47,20 +47,20 @@ export default class Menus extends React.Component {
       },
     } = this.props
     const menus = toJS(menu.menus)
-    // const { sider } = menu
-    // if (sider.collapsed) {
-    //   return menus.map(topMenu => (
-    //     <SubMenu key={topMenu.name} title={topMenu.name}>
-    //       {topMenu.children.map(m => (
-    //         <Menu.Item key={m.to}>
-    //           <Link to={m.to}>
-    //             {m.name}
-    //           </Link>
-    //         </Menu.Item>
-    //       ))}
-    //     </SubMenu>
-    //   ))
-    // }
+    const { sider } = menu
+    if (sider.collapsed) {
+      return menus.map(topMenu => (
+        <SubMenu key={topMenu.name} title={topMenu.name}>
+          {topMenu.children.map(m => (
+            <Menu.Item key={m.to}>
+              <Link to={m.to}>
+                {m.name}
+              </Link>
+            </Menu.Item>
+          ))}
+        </SubMenu>
+      ))
+    }
     return menus.map(topMenu => {
       const m = topMenu.children[0]
       const key = menu.selectedKeys[0]
