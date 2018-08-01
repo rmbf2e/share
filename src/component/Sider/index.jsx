@@ -16,6 +16,24 @@ export default class Sider extends React.Component {
     }).isRequired,
   }
 
+  show = () => {
+    const {
+      store: {
+        menu: { sider },
+      },
+    } = this.props
+    sider.setCollapsed(false)
+  }
+
+  hide = () => {
+    const {
+      store: {
+        menu: { sider },
+      },
+    } = this.props
+    sider.setCollapsed(true)
+  }
+
   render() {
     const {
       store: { menu },
@@ -25,9 +43,12 @@ export default class Sider extends React.Component {
     const selectedKeys = toJS(menu.selectedKeys)
     return (
       <Layout.Sider
-        onCollapse={sider.toggle}
-        collapsible
         collapsed={sider.collapsed}
+        collapsedWidth={50}
+        onMouseOver={this.show}
+        onFocus={this.show}
+        onMouseOut={this.hide}
+        onBlur={this.hide}
       >
         <Menu
           onSelect={menu.setCurrent}

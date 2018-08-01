@@ -3,7 +3,7 @@ import { action, extendObservable, toJS } from 'mobx'
 import upperFirst from 'lodash/upperFirst'
 import castArray from 'lodash/castArray'
 import config from 'share/config'
-// import fxios from 'share/util/fxios'
+import fxios from 'share/util/fxios'
 import router from 'share/store/router'
 
 // 动态获取分页值
@@ -118,12 +118,13 @@ function generateList(options) {
           * 并附加搜索参数
           * */
           this[name].tableProps.dataSource = []
-          return option.request(option.url, {
-              page: page.current,
-              pageSize: page.pageSize,
-              // page and pageSize in search can overwrite the values above
-              ...search,
-            })
+          const request = option.request || fxios.get
+          return request(option.url, {
+            page: page.current,
+            pageSize: page.pageSize,
+            // page and pageSize in search can overwrite the values above
+            ...search,
+          })
             .then(this[setMethod])
             .finally(
               action('stopFetchListLoading', () => {

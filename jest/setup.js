@@ -42,7 +42,3 @@ syncHistoryWithStore(appHistory, routerStore)
 global.routerStore = routerStore
 
 fxios.interceptor.response.push(res => res.json())
-fxios.get = fxios.get.bind(fxios)
-fxios.post = fxios.post.bind(fxios)
-fxios.put = fxios.put.bind(fxios)
-fxios.delete = fxios.delete.bind(fxios)
