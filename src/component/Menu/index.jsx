@@ -2,14 +2,11 @@ import React from 'react'
 import { toJS } from 'mobx'
 import PropTypes from 'prop-types'
 import { Menu } from 'antd'
-import { observer, inject } from 'mobx-react'
 import getFirstPathname from 'share/util/getFirstPathname'
 import Link from './Link'
 
 const { SubMenu } = Menu
 
-@inject('store')
-@observer
 export default class Menus extends React.Component {
   stopSubscribeHistory = null
 
@@ -31,6 +28,7 @@ export default class Menus extends React.Component {
         store: { menu },
       } = this.props
       const key = getFirstPathname(location.pathname)
+      // 初始化在根路径上，key是'/'，不会为空
       menu.setCurrent({ key })
     })
   }
@@ -64,17 +62,18 @@ export default class Menus extends React.Component {
     return menus.map(topMenu => {
       const m = topMenu.children[0]
       const key = menu.selectedKeys[0]
-      const className = key && topMenu.children.find(c => c.to === key)
-          ? 'ant-menu-item-active'
-          : ''
-      return (
-        <SubMenu
-          className={className}
-          key={topMenu.name}
-          title={topMenu.name}
-          onTitleClick={() => push(m.to)}
-        />
-      )
+      const props = {
+        key: topMenu.name,
+        title: topMenu.name,
+      }
+      if (m && m.to) {
+        props.onTitleClick = () => push(m.to)
+      }
+      const className = topMenu.children.some(c => c.to === key)
+        ? 'ant-menu-item-active'
+        : ''
+      props.className = className
+      return <SubMenu {...props} />
     })
   }
 
