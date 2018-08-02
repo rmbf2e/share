@@ -8,6 +8,9 @@ import Link from './Link'
 
 const { SubMenu } = Menu
 
+/*
+ * 在Header头文件中使用的菜单项组件
+ * */
 @inject('store')
 @observer
 export default class Menus extends React.Component {

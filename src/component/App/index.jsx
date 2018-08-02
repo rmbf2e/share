@@ -26,6 +26,9 @@ const onApiSuccess = (res, req) => {
   }
 }
 
+/*
+ * 项目最外层组件，负责监听事件
+ * */
 class App extends React.PureComponent {
   static propTypes = {
     store: PropTypes.shape({
