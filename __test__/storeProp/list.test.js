@@ -200,14 +200,14 @@ describe('storeProp/list', () => {
       })
     })
 
-    it('测试分页，当变换分页条数之后自动跳转回第一页', () => {
+    it('测试分页，当变换分页条数之后自动跳转回第一页，且config.pageSize不应变化', () => {
       expect(router.query.page).toBe(undefined)
       expect(router.query.pageSize).toBe(undefined)
       a.promotions.tableProps.pagination.onChange(2)
       expect(router.query.page).toBe('2')
       a.promotions.tableProps.pagination.onShowSizeChange(null, 29)
       expect(router.query.pageSize).toBe('29')
-      expect(config.pageSize).toBe(29)
+      expect(config.pageSize).toBe(20)
       expect(router.query.page).toBe('1')
       expect(a.promotions.tableProps.pagination.showTotal(123)).toBe(
         '共123条记录',

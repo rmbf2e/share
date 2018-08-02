@@ -65,7 +65,7 @@ function generateList(options) {
           // current: router.query.page || 1,
           // pageSize: router.query.pageSize || config.pageSize,
           onShowSizeChange: action('onShowSizeChange', (currentSize, size) => {
-            config.pageSize = size
+            // config.pageSize = size
             const { pagination } = this[name].tableProps
             pagination.pageSize = size
             pagination.page = 1
