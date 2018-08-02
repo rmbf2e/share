@@ -6,6 +6,7 @@ import Moment from 'moment'
 import {
  Input, Form, DatePicker, TimePicker,
 } from 'antd'
+import App from 'share/component/App'
 import SearchForm from 'share/component/SearchForm'
 import RouterStore from 'share/store/router'
 import config from 'share/config'
@@ -17,25 +18,25 @@ const searchForm = {
 }
 
 const { RangePicker } = DatePicker
+const store = {
+  router,
+  searchForm,
+}
 
 const Comp = props => {
   const { form } = props
   return (
-    <SearchForm
-      {...props}
-      store={{
-        router,
-        searchForm,
-      }}
-    >
-      {form.getFieldDecorator('firstName')(<Input />)}
-      {form.getFieldDecorator('secondName')(<Input />)}
-      {form.getFieldDecorator('firstDate')(<DatePicker />)}
-      {form.getFieldDecorator('secondDate')(<DatePicker />)}
-      {form.getFieldDecorator('rangeDate')(<RangePicker />)}
-      {form.getFieldDecorator('firstTime')(<TimePicker />)}
-      {form.getFieldDecorator('secondTime')(<TimePicker />)}
-    </SearchForm>
+    <App store={store}>
+      <SearchForm {...props}>
+        {form.getFieldDecorator('firstName')(<Input />)}
+        {form.getFieldDecorator('secondName')(<Input />)}
+        {form.getFieldDecorator('firstDate')(<DatePicker />)}
+        {form.getFieldDecorator('secondDate')(<DatePicker />)}
+        {form.getFieldDecorator('rangeDate')(<RangePicker />)}
+        {form.getFieldDecorator('firstTime')(<TimePicker />)}
+        {form.getFieldDecorator('secondTime')(<TimePicker />)}
+      </SearchForm>
+    </App>
   )
 }
 const WrappedForm = Form.create()(Comp)

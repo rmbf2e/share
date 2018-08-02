@@ -13,6 +13,8 @@ import { inject, observer } from 'mobx-react'
 export default class TabsMemoryByHash extends Component {
   static TabPane = Tabs.TabPane
 
+  defaultActiveKey = ''
+
   static propTypes = {
     store: PropTypes.shape({
       router: PropTypes.shape({
@@ -25,6 +27,17 @@ export default class TabsMemoryByHash extends Component {
 
   static defaultProps = {
     onChange: null,
+  }
+
+  componentWillMount() {
+    const {
+      store: {
+        router: { location },
+      },
+    } = this.props
+    if (location.hash) {
+      this.defaultActiveKey = location.hash.slice(1)
+    }
   }
 
   onChangeTab = key => {
@@ -46,14 +59,6 @@ export default class TabsMemoryByHash extends Component {
   render() {
     const props = { ...this.props }
     props.onChange = this.onChangeTab
-    const {
-      store: {
-        router: { location },
-      },
-    } = this.props
-    if (location.hash) {
-      props.defaultActiveKey = location.hash.slice(1)
-    }
-    return <Tabs {...props} />
+    return <Tabs {...props} defaultActiveKey={this.defaultActiveKey} />
   }
 }

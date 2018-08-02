@@ -1,19 +1,16 @@
 import React from 'react'
-import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
-import createMemoryHistory from 'history/createMemoryHistory'
 import { mount } from 'enzyme'
+import { Tabs as AntTabs } from 'antd'
 import Tabs from 'share/component/Tabs'
 
-const routerStore = new RouterStore()
-
-const appHistory = createMemoryHistory()
-syncHistoryWithStore(appHistory, routerStore)
+const router = global.routerStore
+const store = { router }
 
 const { TabPane } = Tabs
 
 const onChange = jest.fn()
 const App = (
-  <Tabs onChange={onChange} store={{ router: routerStore }}>
+  <Tabs onChange={onChange} store={store}>
     <TabPane tab="One" key="one">
       One
     </TabPane>
@@ -25,7 +22,7 @@ const App = (
 
 describe('components/Tabs', () => {
   it('default tab memory by hash', () => {
-    appHistory.push({
+    router.push({
       hash: 'one',
     })
     let app = mount(App)
@@ -36,7 +33,7 @@ describe('components/Tabs', () => {
     app.instance().wrappedInstance.onChangeTab('two')
     app.unmount()
 
-    appHistory.push({
+    router.push({
       hash: 'two',
     })
     app = mount(App)
@@ -46,7 +43,7 @@ describe('components/Tabs', () => {
 
   it('测试onChange prop', () => {
     onChange.mockClear()
-    appHistory.push({
+    router.push({
       hash: 'two',
     })
     const app = mount(App)
@@ -54,6 +51,28 @@ describe('components/Tabs', () => {
     const tabTitle = app.find('.ant-tabs-tab').at(0)
     tabTitle.simulate('click')
     expect(onChange).toHaveBeenCalledWith('one')
+    const tabs = app.find(AntTabs).at(0)
+    expect(tabs.prop('defaultActiveKey')).toBe('two')
     app.unmount()
+  })
+
+  it('没有hash时，默认第一个tab为active tab，并且没有onChange也能用', () => {
+    const TabWrapper = (
+      <Tabs store={store}>
+        <TabPane tab="One" key="one">
+          One
+        </TabPane>
+        <TabPane tab="Two" key="two">
+          Two
+        </TabPane>
+      </Tabs>
+    )
+    router.push('/')
+    const app = mount(TabWrapper)
+    const tabs = app.find(AntTabs).at(0)
+    expect(tabs.prop('defaultActiveKey')).toBe('')
+    const tabTitle = app.find('.ant-tabs-tab').at(0)
+    tabTitle.simulate('click')
+    expect(router.location.hash).toBe('#one')
   })
 })

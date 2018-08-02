@@ -2,11 +2,14 @@ import React from 'react'
 import { toJS } from 'mobx'
 import PropTypes from 'prop-types'
 import { Menu } from 'antd'
+import { inject, observer } from 'mobx-react'
 import getFirstPathname from 'share/util/getFirstPathname'
 import Link from './Link'
 
 const { SubMenu } = Menu
 
+@inject('store')
+@observer
 export default class Menus extends React.Component {
   stopSubscribeHistory = null
 
@@ -49,18 +52,19 @@ export default class Menus extends React.Component {
     if (sider.collapsed) {
       return menus.map(topMenu => (
         <SubMenu key={topMenu.name} title={topMenu.name}>
-          {topMenu.children.map(m => (
-            <Menu.Item key={m.to}>
-              <Link to={m.to}>
-                {m.name}
-              </Link>
-            </Menu.Item>
-          ))}
+          {topMenu.children
+            && topMenu.children.map(m => (
+              <Menu.Item key={m.to}>
+                <Link to={m.to}>
+                  {m.name}
+                </Link>
+              </Menu.Item>
+            ))}
         </SubMenu>
       ))
     }
     return menus.map(topMenu => {
-      const m = topMenu.children[0]
+      const m = topMenu.children && topMenu.children[0]
       const key = menu.selectedKeys[0]
       const props = {
         key: topMenu.name,
@@ -69,9 +73,9 @@ export default class Menus extends React.Component {
       if (m && m.to) {
         props.onTitleClick = () => push(m.to)
       }
-      const className = topMenu.children.some(c => c.to === key)
-        ? 'ant-menu-item-active'
-        : ''
+      const className = topMenu.children && topMenu.children.some(c => c.to === key)
+          ? 'ant-menu-item-active'
+          : ''
       props.className = className
       return <SubMenu {...props} />
     })

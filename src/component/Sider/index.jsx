@@ -57,7 +57,7 @@ export default class Sider extends React.Component {
         >
           {menus.map(m => (
             <Menu.Item key={m.to}>
-              <MenuLink onClick={this.checkSamePathname} to={m.to}>
+              <MenuLink to={m.to}>
                 <Icon type={m.icon} />
                 <span>
                   {m.name}

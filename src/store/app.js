@@ -15,15 +15,11 @@ class App extends EventEmitter {
 
   // 获取系统必须元数据
   fetchMeta = () => {
-    // eslint-disable-next-line
-    console.log('请实现app store的fetchMeta方法')
-    return Promise.resolve()
+    throw new Error('请先实现app store的fetchMeta方法')
   }
 
   fetchMe = () => {
-    // eslint-disable-next-line
-    console.log('请实现app store的fetchMe方法')
-    Promise.resolve()
+    throw new Error('请先实现app store的fetchMe方法')
   }
 
   logout = () => {

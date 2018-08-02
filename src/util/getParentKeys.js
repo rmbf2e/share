@@ -9,6 +9,10 @@ export default function getParentKeys(node, keyName = 'key') {
   if (node) {
     let p = node.parent
     while (p) {
+      const v = p[keyName]
+      if (!v) {
+        break
+      }
       keys.push(p[keyName])
       p = p.parent
     }

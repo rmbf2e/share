@@ -250,5 +250,28 @@ describe('storeProp/list', () => {
         expect(res.dataSource[1].age).toBe(3)
       })
     })
+
+    it('fetch参数，没有request则默认使用fxios.get', () => {
+      const u = url.format({
+        pathname: config.baseURL + option.url,
+        query: { page: 1, pageSize: config.pageSize },
+      })
+      fetchMock.get(u, data)
+      class C {
+        constructor() {
+          list.call(this, [
+            {
+              name: 'promotions',
+              rowKey: 'id',
+              url: 'promotions',
+            },
+          ])
+        }
+      }
+      const c = new C()
+      return c.fetchPromotions().then(res => {
+        expect(res.dataSource).toHaveLength(2)
+      })
+    })
   })
 })

@@ -2,7 +2,6 @@ import React from 'react'
 import { mount } from 'enzyme'
 import { render, unmountComponentAtNode } from 'react-dom'
 import { toJS } from 'mobx'
-import { inject, observer } from 'mobx-react'
 import { Menu as AntMenu } from 'antd'
 // import { render, unmountComponentAtNode } from 'react-dom'
 import Link from 'share/component/Menu/Link'
@@ -41,13 +40,15 @@ menu.setMenus([
       },
     ],
   },
+  {
+    name: 'parent3',
+  },
 ])
-
-const InjectedMenu = inject('store')(observer(Menu))
+menu.setCurrent({ key: 'child1' })
 
 const Wrapper = () => (
   <App store={store}>
-    <InjectedMenu />
+    <Menu />
   </App>
 )
 

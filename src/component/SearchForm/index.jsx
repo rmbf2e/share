@@ -2,6 +2,7 @@ import URL from 'url'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Button } from 'antd'
+import { inject, observer } from 'mobx-react'
 import forEach from 'lodash/forEach'
 import reduce from 'lodash/reduce'
 import isEmptyQuery from 'share/util/isEmptyQuery'
@@ -21,6 +22,8 @@ import { parseMoment, formatMoment } from 'share/util/moment'
  * 默认提交时会带page参数为1，可通过prop withPagination={false}取消该行为
  * 提交表单时，表单项name以Time结尾的被格式化为时间格式
  */
+@inject('store')
+@observer
 export default class SearchForm extends React.Component {
   // 标记此次history push是否由submit引起，避免submit引起的history变更调用两次props.onSubmit
   pushedBySubmit = false
