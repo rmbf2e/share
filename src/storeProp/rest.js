@@ -169,6 +169,7 @@ function rest(options) {
       decoratorObject[option.name] = observable.shallow
     }
     decoratorObject[setMethod] = action
+    decoratorObject[restoreMethod] = action
     extendObservable(this, extendObject, decoratorObject)
   })
 }
