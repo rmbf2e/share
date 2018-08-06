@@ -12,21 +12,21 @@ const { Content } = Layout
 function mapStyles(styles) {
   return {
     opacity: styles.opacity,
-    // top: `${styles.x}px`,
+    left: `${styles.x}px`,
   }
 }
 const transition = {
   atEnter: {
     opacity: 0,
-    // x: -100,
+    x: 100,
   },
   atLeave: {
     opacity: 0,
-    // x: 100,
+    x: -100,
   },
   atActive: {
     opacity: 1,
-    // x: 0,
+    x: 0,
   },
 }
 
