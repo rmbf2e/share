@@ -58,6 +58,7 @@
     "moment": "^2.22.2",
     "opn": "^5.3.0",
     "prop-types": "^15.6.2",
+    "rc-animate": "^2.4.4",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-router": "^4.3.1",
