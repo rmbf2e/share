@@ -52,6 +52,7 @@ function rest(options) {
         const promise = request({ url: create.url, param }, data).then(res => {
           if (this.emit) {
             this.emit(`${name}:changed`)
+            this.emit(`${name}:created`, res)
           }
           if (option.default) {
             this[setMethod](option.default)
@@ -84,6 +85,7 @@ function rest(options) {
         const promise = request({ url: update.url, param }, data).then(res => {
           if (this.emit) {
             this.emit(`${name}:changed`)
+            this.emit(`${name}:updated`, res)
           }
           if (option.default) {
             this[setMethod](option.default)
@@ -116,6 +118,7 @@ function rest(options) {
         const promise = request({ url: destroy.url, param }, data).then(res => {
           if (this.emit) {
             this.emit(`${name}:changed`)
+            this.emit(`${name}:destroyed`, res)
           }
           if (destroy.interceptor && destroy.interceptor.response) {
             return destroy.interceptor.response(res)

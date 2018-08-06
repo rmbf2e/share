@@ -1,4 +1,5 @@
 // import fetch from 'util/fetch'
+import EventEmitter from 'events'
 import { toJS } from 'mobx'
 import fetchMock from 'fetch-mock'
 import rest from 'share/storeProp/rest'
@@ -275,11 +276,11 @@ describe('storeProp/rest', () => {
 
     expect(fn.mock.calls).toHaveLength(0)
     await b.createUser({})
-    expect(fn.mock.calls).toHaveLength(1)
-    await b.updateUser({})
     expect(fn.mock.calls).toHaveLength(2)
+    await b.updateUser({})
+    expect(fn.mock.calls).toHaveLength(4)
     await b.destroyUser({})
-    expect(fn.mock.calls).toHaveLength(3)
+    expect(fn.mock.calls).toHaveLength(6)
   })
 
   it('测试default属性', () => {
@@ -307,5 +308,50 @@ describe('storeProp/rest', () => {
     expect(b.user).toEqual(bUser)
     await b.updateUser({})
     expect(b.user).toEqual({})
+  })
+
+  describe('测试emit的参数', () => {
+    class E extends EventEmitter {
+      constructor() {
+        super()
+        rest.call(this, [option])
+      }
+    }
+    it('测试create的emit事件', () => {
+      const e = new E()
+      const createdUser = { name: 'adf' }
+      fetchMock.post(`${config.baseURL}${option.create.url}`, createdUser)
+      const fn = jest.fn()
+      e.on('user:changed', fn)
+      e.on('user:created', fn)
+      return e.createUser().then(() => {
+        expect(fn.mock.calls).toHaveLength(2)
+        expect(fn).toHaveBeenCalledWith(createdUser)
+      })
+    })
+
+    it('测试update的emit事件', () => {
+      const e = new E()
+      const updatedUser = { name: 'adf' }
+      fetchMock.put(`${config.baseURL}${option.update.url}`, updatedUser)
+      const fn = jest.fn()
+      e.on('user:changed', fn)
+      e.on('user:updated', fn)
+      return e.updateUser().then(() => {
+        expect(fn.mock.calls).toHaveLength(2)
+        expect(fn).toHaveBeenCalledWith(updatedUser)
+      })
+    })
+
+    it('测试destroy的emit事件', () => {
+      const e = new E()
+      fetchMock.delete(`${config.baseURL}${option.destroy.url}`, {})
+      const fn = jest.fn()
+      e.on('user:changed', fn)
+      e.on('user:destroyed', fn)
+      return e.destroyUser({}).then(() => {
+        expect(fn.mock.calls).toHaveLength(2)
+      })
+    })
   })
 })
