@@ -37,6 +37,12 @@ function rest(options) {
     extendObject[setMethod] = res => {
       this[option.name] = res.data ? res.data : res
     }
+    const restoreMethod = `restore${upperName}`
+    extendObject[restoreMethod] = () => {
+      if (option.default) {
+        this[option.name] = option.default
+      }
+    }
     extendObject[option.name] = option.default
     if (option.create) {
       const creating = `creating${upperName}`
@@ -54,9 +60,7 @@ function rest(options) {
             this.emit(`${name}:changed`)
             this.emit(`${name}:created`, res)
           }
-          if (option.default) {
-            this[setMethod](option.default)
-          }
+          this[restoreMethod]()
           if (create.interceptor && create.interceptor.response) {
             return create.interceptor.response(res)
           }
@@ -87,9 +91,7 @@ function rest(options) {
             this.emit(`${name}:changed`)
             this.emit(`${name}:updated`, res)
           }
-          if (option.default) {
-            this[setMethod](option.default)
-          }
+          this[restoreMethod]()
           if (update.interceptor && update.interceptor.response) {
             return update.interceptor.response(res)
           }
@@ -120,6 +122,7 @@ function rest(options) {
             this.emit(`${name}:changed`)
             this.emit(`${name}:destroyed`, res)
           }
+          this[restoreMethod]()
           if (destroy.interceptor && destroy.interceptor.response) {
             return destroy.interceptor.response(res)
           }

@@ -1,6 +1,6 @@
 // import fetch from 'util/fetch'
 import EventEmitter from 'events'
-import { toJS } from 'mobx'
+import { toJS, runInAction } from 'mobx'
 import fetchMock from 'fetch-mock'
 import rest from 'share/storeProp/rest'
 import config from 'share/config'
@@ -307,6 +307,16 @@ describe('storeProp/rest', () => {
     b.setUser(bUser)
     expect(b.user).toEqual(bUser)
     await b.updateUser({})
+    expect(b.user).toEqual({})
+  })
+
+  it('测试restoreMethod', () => {
+    const b = new A()
+    expect(b.user).toEqual({})
+    const u = { name: 'sdfsdf' }
+    b.setUser(u)
+    expect(b.user).toEqual(u)
+    b.restoreUser()
     expect(b.user).toEqual({})
   })
 
