@@ -54,6 +54,7 @@ function generateList(options) {
       search: {},
       tableProps: {
         rowKey: option.rowKey,
+        onRow: record => ({ className: record.className }),
         dataSource: [],
         loading: true,
         bordered: true,
