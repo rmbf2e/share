@@ -1,4 +1,5 @@
 const errorText = `
+add 'share/src' to your webpack alias path
 do not use
 import share from 'share'
 

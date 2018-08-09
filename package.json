@@ -1,7 +1,7 @@
 {
   "name": "share",
   "version": "0.0.1",
-  "description": "shared components and utils for the great RMB frontend group",
+  "description": "shared components and utils for multiple projects",
   "main": "index.js",
   "scripts": {
     "test": "jest",
