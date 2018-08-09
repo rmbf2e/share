@@ -13,7 +13,7 @@ git submodule方法虽不能解决所有这些问题，但可以减少上述开�
 如果你对git的子模块概念还不熟悉的话，请先阅读[git submodule](https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97)
 clone it by git submodule
 ```
-git submodule add http://git.jd.com/rmb-frontend/share.git
+git submodule add http://github.com/superwf/share.git
 ```
 添加后，share文件夹存放在项目根目录中
 在webpack配置`alias`中添加`share: resolvePath('./share/src')`

@@ -20,6 +20,7 @@ import fxios from 'share/util/fxios'
  * 会生成 group 属性，默认值为default
  * 会生成 creatingGroup 属性
  * 会生成 createGroup 方法
+ * 会生成 restoreGroup 方法，将group恢复成默认值
  * 如果没有create，则不会生成这两项
  *
  * update, fetch, destroy方法与create相同
