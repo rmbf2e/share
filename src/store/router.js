@@ -1,5 +1,4 @@
-// import createHashHistory from 'history/createHashHistory'
-import url from 'url'
+import URL from 'url'
 import createBrowserHistory from 'history/createBrowserHistory'
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
 import { computed } from 'mobx'
@@ -22,7 +21,7 @@ class Router extends RouterStore {
   @computed
   get query() {
     const { search } = this.location
-    return search ? url.parse(search, true).query : {}
+    return search ? URL.parse(search, true).query : {}
   }
 }
 

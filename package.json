@@ -42,7 +42,7 @@
     "stylelint-config-recommended": "^2.1.0"
   },
   "dependencies": {
-    "ant-design-pro": "^2.0.0-beta.2",
+    "ant-design-pro": "^1.4.4",
     "antd": "^3.7.2",
     "classnames": "^2.2.6",
     "core-js": "^2.5.7",
