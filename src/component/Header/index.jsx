@@ -1,12 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Layout } from 'antd'
-// import { observer, inject } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
 import s from './style.m.less'
 
 const { Header } = Layout
 
-export default class AppHeader extends React.PureComponent {
+@inject('store')
+@observer
+export default class AppHeader extends React.Component {
   static propTypes = {
     store: PropTypes.shape({
       app: PropTypes.shape({
