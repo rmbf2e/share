@@ -78,7 +78,6 @@ export default class CheckedTree extends React.Component {
         checkedKeys={checkedKeys}
         selectable={false}
         checkable
-        defaultExpandAll
         checkStrictly
       >
         {this.renderTreeNodes(data)}

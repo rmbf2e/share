@@ -36,6 +36,7 @@
     "jest-environment-enzyme": "^6.0.2",
     "jest-enzyme": "^6.0.2",
     "jsdoc": "^3.5.5",
+    "jsinspect": "^0.12.7",
     "prettier": "^1.14.0",
     "stylelint": "^9.2.1",
     "stylelint-config-property-sort-order-smacss": "^4.0.0",
