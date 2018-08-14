@@ -63,6 +63,7 @@ export default class CheckedTree extends React.Component {
           title={item.title}
           key={item.key}
           data={item}
+          className={item.className}
         >
           {this.renderTreeNodes(item.children)}
         </TreeNode>
