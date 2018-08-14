@@ -4,7 +4,7 @@ import { toJS } from 'mobx'
 import { Tree } from 'antd'
 import uniq from 'lodash/uniq'
 import pull from 'lodash/pull'
-import removeEmptyParentKey from 'share/util/removeEmptyParentKey'
+// import removeEmptyParentKey from 'share/util/removeEmptyParentKey'
 import getDescendantKeys from 'share/util/getDescendantKeys'
 import getParentKeys from 'share/util/getParentKeys'
 
@@ -42,7 +42,9 @@ export default class CheckedTree extends React.Component {
     } else {
       pull(checkedKeys, ...descendentKeys)
       // 通过取交集查看上级key是否在选中之内，没有则删除
-      checkedKeys = removeEmptyParentKey(data, checkedKeys)
+      // 后来由于有需求，去掉该功能
+      // 使父节点允许为空
+      // checkedKeys = removeEmptyParentKey(data, checkedKeys)
     }
     const { onCheck } = this.props
     onCheck(uniq(checkedKeys))

@@ -39,13 +39,13 @@ describe('component/Tree', () => {
     expect(tree.state('checkedKeys')).toHaveLength(0)
   })
 
-  it('点击子组件，若该树内为空，则上级组件也自动uncheck', () => {
+  it('点击子组件，若该树内为空，则上级组件不会自动uncheck', () => {
     const tree = mount(<TestTree />)
     const checkbox = tree.find('.ant-tree-node-content-wrapper')
     expect(tree.state('checkedKeys')).toHaveLength(0)
     checkbox.at(0).simulate('click')
     expect(tree.state('checkedKeys').length).toBeGreaterThan(1)
     checkbox.at(1).simulate('click')
-    expect(tree.state('checkedKeys')).toHaveLength(0)
+    expect(tree.state('checkedKeys')).toHaveLength(1)
   })
 })
