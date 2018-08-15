@@ -47,6 +47,9 @@ describe('storeProp/list', () => {
     expect(tableProps.dataSource).toEqual([])
     expect(tableProps.loading).toBe(true)
     expect(tableProps.bordered).toBe(true)
+    expect(tableProps.onRow({ className: 'abc', xxx: 111 })).toEqual({
+      className: 'abc',
+    })
     const { pagination } = tableProps
     expect(pagination.showSizeChanger).toBe(true)
     expect(pagination.defaultPageSize).toBe(config.pageSize)
