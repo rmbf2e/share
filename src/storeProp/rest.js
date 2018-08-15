@@ -17,11 +17,11 @@ import fxios from 'share/util/fxios'
  *     },
  *   },
  * }]
- * 会生成 group 属性，默认值为default
+ * 会生成 group 属性，默认值为default属性中的{}
  * 会生成 creatingGroup 属性
  * 会生成 createGroup 方法
+ * 如果没有create，则不会生成上面这两项
  * 会生成 restoreGroup 方法，将group恢复成默认值
- * 如果没有create，则不会生成这两项
  *
  * update, fetch, destroy方法与create相同
  *
@@ -45,99 +45,48 @@ function rest(options) {
       }
     }
     extendObject[option.name] = option.default
-    if (option.create) {
-      const creating = `creating${upperName}`
-      const createMethod = `create${upperName}`
-      extendObject[creating] = false
-      extendObject[createMethod] = (data, query, param) => {
-        this[creating] = true
-        const { create } = option
-        if (create.interceptor && create.interceptor.request) {
-          data = create.interceptor.request(data)
+    const methods = ['create', 'update', 'destroy']
+    const httpMethods = ['post', 'put', 'delete']
+    const pastWords = ['created', 'updated', 'destroyed']
+    const ingWords = ['creating', 'updating', 'destroying']
+    methods.forEach((method, index) => {
+      if (option[method]) {
+        const ing = `${ingWords[index]}${upperName}`
+        const doIt = `${method}${upperName}`
+        extendObject[ing] = false
+        extendObject[doIt] = (data, query, param) => {
+          this[ing] = true
+          const { [method]: methodOption } = option
+          if (methodOption.interceptor && methodOption.interceptor.request) {
+            data = methodOption.interceptor.request(data)
+          }
+          const request = option[method].request || fxios[httpMethods[index]]
+          const promise = request({ url: methodOption.url, param }, data).then(
+            res => {
+              if (this.emit) {
+                this.emit(`${name}:changed`)
+                this.emit(`${name}:${pastWords[index]}`, res)
+              }
+              this[restoreMethod]()
+              if (
+                methodOption.interceptor
+                && methodOption.interceptor.response
+              ) {
+                return methodOption.interceptor.response(res)
+              }
+              return res
+            },
+          )
+          promise.finally(
+            action(`stop ${ing}`, () => {
+              this[ing] = false
+            }),
+          )
+          return promise
         }
-        const request = option.create.request || fxios.post
-        const promise = request({ url: create.url, param }, data).then(res => {
-          if (this.emit) {
-            this.emit(`${name}:changed`)
-            this.emit(`${name}:created`, res)
-          }
-          this[restoreMethod]()
-          if (create.interceptor && create.interceptor.response) {
-            return create.interceptor.response(res)
-          }
-          return res
-        })
-        promise.finally(
-          action(createMethod, () => {
-            this[creating] = false
-          }),
-        )
-        return promise
+        decoratorObject[doIt] = action
       }
-      decoratorObject[createMethod] = action
-    }
-    if (option.update) {
-      const updating = `updating${upperName}`
-      const updateMethod = `update${upperName}`
-      extendObject[updating] = false
-      extendObject[updateMethod] = (data, query, param) => {
-        this[updating] = true
-        const { update } = option
-        if (update.interceptor && update.interceptor.request) {
-          data = update.interceptor.request(data)
-        }
-        const request = option.update.request || fxios.put
-        const promise = request({ url: update.url, param }, data).then(res => {
-          if (this.emit) {
-            this.emit(`${name}:changed`)
-            this.emit(`${name}:updated`, res)
-          }
-          this[restoreMethod]()
-          if (update.interceptor && update.interceptor.response) {
-            return update.interceptor.response(res)
-          }
-          return res
-        })
-        promise.finally(
-          action(updateMethod, () => {
-            this[updating] = false
-          }),
-        )
-        return promise
-      }
-      decoratorObject[updateMethod] = action
-    }
-    if (option.destroy) {
-      const destroying = `destroying${upperName}`
-      const destroyMethod = `destroy${upperName}`
-      extendObject[destroying] = false
-      extendObject[destroyMethod] = (data, param) => {
-        this[destroying] = true
-        const { destroy } = option
-        if (destroy.interceptor && destroy.interceptor.request) {
-          data = destroy.interceptor.request(data)
-        }
-        const request = option.destroy.request || fxios.delete
-        const promise = request({ url: destroy.url, param }, data).then(res => {
-          if (this.emit) {
-            this.emit(`${name}:changed`)
-            this.emit(`${name}:destroyed`, res)
-          }
-          this[restoreMethod]()
-          if (destroy.interceptor && destroy.interceptor.response) {
-            return destroy.interceptor.response(res)
-          }
-          return res
-        })
-        promise.finally(
-          action(destroyMethod, () => {
-            this[destroying] = false
-          }),
-        )
-        return promise
-      }
-      decoratorObject[destroyMethod] = action
-    }
+    })
     if (option.fetch) {
       const fetching = `fetching${upperName}`
       const fetchMethod = `fetch${upperName}`
