@@ -25,6 +25,9 @@ import fxios from 'share/util/fxios'
  *
  * update, fetch, destroy方法与create相同
  *
+ * create, update, destroy方法成功后，如果该class继承自events，有emit方法，则会emit `${name}:changed`事件，无emit参数
+ * 同时emit `${name}:${created}`事件，emit参数为请求的response，与请求的数据对象{ data, query }，data为请求体，query为url query
+ *
  * @param {Array} options
  * @return void
  * */
@@ -65,7 +68,7 @@ function rest(options) {
             res => {
               if (this.emit) {
                 this.emit(`${name}:changed`)
-                this.emit(`${name}:${pastWords[index]}`, res)
+                this.emit(`${name}:${pastWords[index]}`, res, { data, query })
               }
               this[restoreMethod]()
               if (

@@ -334,9 +334,12 @@ describe('storeProp/rest', () => {
       const fn = jest.fn()
       e.on('user:changed', fn)
       e.on('user:created', fn)
-      return e.createUser().then(() => {
+      return e.createUser({ a: 2 }, { a: 1 }).then(() => {
         expect(fn.mock.calls).toHaveLength(2)
-        expect(fn).toHaveBeenCalledWith(createdUser)
+        expect(fn).toHaveBeenCalledWith(createdUser, {
+          data: { a: 2 },
+          query: { a: 1 },
+        })
       })
     })
 
@@ -349,7 +352,10 @@ describe('storeProp/rest', () => {
       e.on('user:updated', fn)
       return e.updateUser().then(() => {
         expect(fn.mock.calls).toHaveLength(2)
-        expect(fn).toHaveBeenCalledWith(updatedUser)
+        expect(fn).toHaveBeenCalledWith(updatedUser, {
+          data: undefined,
+          query: undefined,
+        })
       })
     })
 
