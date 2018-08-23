@@ -3,6 +3,7 @@ import modal from './modal'
 import list from './list'
 import rest from './rest'
 import setter from './setter'
+import lazy from './lazy'
 
 // 自动将storeProp文件夹里的所有文件加载为生成器
 // 例如modal.js文件将被加载到generators.modal属性
@@ -20,6 +21,7 @@ const generators = {
   list,
   rest,
   setter,
+  lazy,
 }
 
 /*
