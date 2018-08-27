@@ -47,11 +47,7 @@ const AppContent = ({ loading, children }) => {
       </AnimatedSwitch>
     </Switch>
   )
-  return (
-    <Content id="appContent">
-      {content}
-    </Content>
-)
+  return <Content id="appContent">{content}</Content>
 }
 
 AppContent.propTypes = {

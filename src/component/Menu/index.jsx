@@ -55,12 +55,10 @@ export default class Menus extends React.Component {
     if (sider.collapsed) {
       return menus.map(topMenu => (
         <SubMenu key={topMenu.name} title={topMenu.name}>
-          {topMenu.children
-            && topMenu.children.map(m => (
+          {topMenu.children &&
+            topMenu.children.map(m => (
               <Menu.Item key={m.to}>
-                <Link to={m.to}>
-                  {m.name}
-                </Link>
+                <Link to={m.to}>{m.name}</Link>
               </Menu.Item>
             ))}
         </SubMenu>
@@ -76,7 +74,8 @@ export default class Menus extends React.Component {
       if (m && m.to) {
         props.onTitleClick = () => push(m.to)
       }
-      const className = topMenu.children && topMenu.children.some(c => c.to === key)
+      const className =
+        topMenu.children && topMenu.children.some(c => c.to === key)
           ? 'ant-menu-item-active'
           : ''
       props.className = className

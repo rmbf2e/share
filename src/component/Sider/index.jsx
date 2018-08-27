@@ -59,9 +59,7 @@ export default class Sider extends React.Component {
             <Menu.Item key={m.to}>
               <MenuLink to={m.to}>
                 <Icon type={m.icon} />
-                <span>
-                  {m.name}
-                </span>
+                <span>{m.name}</span>
               </MenuLink>
             </Menu.Item>
           ))}

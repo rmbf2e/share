@@ -67,9 +67,7 @@ class App extends React.PureComponent {
     return (
       <Provider store={store}>
         <LocaleProvider locale={zhCN}>
-          <Router history={history}>
-            {children}
-          </Router>
+          <Router history={history}>{children}</Router>
         </LocaleProvider>
       </Provider>
     )

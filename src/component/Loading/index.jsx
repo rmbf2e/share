@@ -17,9 +17,7 @@ const Loading = ({ text, error }) => {
         <div className={classnames(style.cube, style.cube4)} />
         <div className={classnames(style.cube, style.cube3)} />
       </div>
-      <div>
-        {text || defaultText}
-      </div>
+      <div>{text || defaultText}</div>
     </div>
   )
 }

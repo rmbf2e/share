@@ -118,9 +118,9 @@ export default class SearchForm extends React.Component {
       query,
       (v, k) => {
         if (
-          k in formValues
-          && (!formValues[k] || isEmptyQuery(formValues[k]))
-          && k in query
+          k in formValues &&
+          (!formValues[k] || isEmptyQuery(formValues[k])) &&
+          k in query
         ) {
           delete query[k]
         }
