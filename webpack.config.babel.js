@@ -2,13 +2,12 @@ import path from 'path'
 
 const resolvePath = relativePath => path.resolve(__dirname, relativePath)
 
-
 const styleLoader = {
-      loader: 'style-loader',
-      options: {
-        sourceMap: true,
-      },
-    }
+  loader: 'style-loader',
+  options: {
+    sourceMap: true,
+  },
+}
 
 const config = {
   // entry: {

@@ -10,9 +10,9 @@ export const dateFormat = 'YYYY-MM-DD'
  * */
 export function parseMoment(value) {
   if (
-    typeof value === 'string'
+    typeof value === 'string' &&
     // 解析日期，或时间的格式
-    && /^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}(\d{2})?)?/.test(value)
+    /^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}(\d{2})?)?/.test(value)
   ) {
     return Moment(value)
   }

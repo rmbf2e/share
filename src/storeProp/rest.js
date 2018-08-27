@@ -72,8 +72,8 @@ function rest(options) {
               }
               this[restoreMethod]()
               if (
-                methodOption.interceptor
-                && methodOption.interceptor.response
+                methodOption.interceptor &&
+                methodOption.interceptor.response
               ) {
                 return methodOption.interceptor.response(res)
               }

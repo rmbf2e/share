@@ -8,9 +8,9 @@ const getFirstPathname = pathname => {
     return '/'
   }
   if (pathname.startsWith('/')) {
-    return `/${ pathname.split('/')[1]}`
+    return `/${pathname.split('/')[1]}`
   }
-  return `/${ pathname.split('/')[0]}`
+  return `/${pathname.split('/')[0]}`
 }
 
 export default getFirstPathname

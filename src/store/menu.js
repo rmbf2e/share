@@ -44,7 +44,8 @@ class Sider {
 class Menu {
   sider = new Sider()
 
-  @observable selectedKeys = []
+  @observable
+  selectedKeys = []
 
   // @observable openKeys = []
 
@@ -54,7 +55,8 @@ class Menu {
   setCurrent = ({ key }) => {
     this.selectedKeys[0] = key
     const menus = toJS(this.menus)
-    const currentSubMenus = find(menus, m => find(m.children, c => c.to === key)) || menus[0]
+    const currentSubMenus =
+      find(menus, m => find(m.children, c => c.to === key)) || menus[0]
 
     // this.openKeys[0] = currentSubMenus.name
     this.sider.setMenus(currentSubMenus.children)

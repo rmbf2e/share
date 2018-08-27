@@ -31,7 +31,8 @@ const generators = {
  * @param {Object} option
  * @return {Class} 继承后的新class
  * */
-const storeProp = option => Class => class ExtendedClass extends Class {
+const storeProp = option => Class =>
+  class ExtendedClass extends Class {
     constructor(...args) {
       super(...args)
       forEach(option, (v, k) => {
