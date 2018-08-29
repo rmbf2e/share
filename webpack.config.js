@@ -1,4 +1,10 @@
-// const alias = require('./build/alias')
+const path = require('path')
+
+const resolvePath = relativePath => path.resolve(__dirname, relativePath)
+
+const alias = {
+  share: resolvePath('./src'),
+}
 
 const styleLoader = {
   loader: 'style-loader',
@@ -18,9 +24,7 @@ const config = {
   // },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.less'],
-    alias: {
-      share: './src/',
-    },
+    alias,
   },
   module: {
     rules: [
