@@ -4,7 +4,9 @@ import { notification, LocaleProvider } from 'antd'
 import { Provider } from 'mobx-react'
 import { Router } from 'react-router-dom'
 import zhCN from 'antd/lib/locale-provider/zh_CN'
+import nprogress from 'nprogress'
 import fxios from 'share/util/fxios'
+import 'nprogress/nprogress.css'
 
 // 监听后端接口错误函数
 const onApiError = error => {
@@ -42,6 +44,16 @@ class App extends React.PureComponent {
   componentDidMount() {
     fxios.on('error', onApiError)
     fxios.on('success', onApiSuccess)
+    const {
+      store: {
+        router: { history },
+      },
+    } = this.props
+    // 添加页面切换特效
+    history.listen(() => {
+      nprogress.start()
+      setTimeout(() => nprogress.done(), 1000)
+    })
   }
 
   // 解除监听接口错误

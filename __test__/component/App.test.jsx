@@ -3,9 +3,12 @@ import { mount } from 'enzyme'
 import { notification, LocaleProvider } from 'antd'
 import { Provider } from 'mobx-react'
 import { Router } from 'react-router-dom'
+import nprogress from 'nprogress'
 import App from 'share/component/App'
 import RouterStore from 'share/store/router'
 import fxios from 'share/util/fxios'
+
+jest.mock('nprogress')
 
 const router = new RouterStore()
 const store = { router }
@@ -131,5 +134,19 @@ describe('测试App', () => {
     spy.mockRestore()
     preventEmit.mockRestore()
     preventConsole.mockRestore()
+  })
+
+  it('测试nprogress', () => {
+    jest.useFakeTimers()
+    const com = mount(<TestApp />)
+    expect(nprogress.start).not.toHaveBeenCalled()
+    const app = com.find(App).at(0)
+    app.prop('store').router.history.push('/noMatch')
+    expect(nprogress.start).toHaveBeenCalled()
+    expect(nprogress.done).not.toHaveBeenCalled()
+    jest.advanceTimersByTime(1000)
+
+    expect(nprogress.done).toHaveBeenCalled()
+    com.unmount()
   })
 })
