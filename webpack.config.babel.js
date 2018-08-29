@@ -34,6 +34,48 @@ const config = {
             options: {
               cacheDirectory: true,
               compact: false,
+              babelrc: false,
+              presets: ['@babel/preset-react', '@babel/preset-env'],
+              plugins: [
+                [
+                  'import',
+                  {
+                    libraryName: 'lodash',
+                    libraryDirectory: '',
+                    camel2DashComponentName: false,
+                  },
+                  'lodash',
+                ],
+                [
+                  'import',
+                  {
+                    libraryName: 'antd',
+                    style: true,
+                  },
+                  'antd',
+                ],
+                '@babel/plugin-transform-runtime',
+                '@babel/plugin-proposal-object-rest-spread',
+                '@babel/plugin-syntax-dynamic-import',
+                '@babel/plugin-syntax-jsx',
+                [
+                  '@babel/plugin-proposal-decorators',
+                  {
+                    legacy: true,
+                  },
+                ],
+                [
+                  '@babel/plugin-proposal-class-properties',
+                  {
+                    loose: true,
+                  },
+                ],
+              ],
+              env: {
+                production: {
+                  plugins: ['transform-react-remove-prop-types'],
+                },
+              },
             },
           },
           {
