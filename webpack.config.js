@@ -1,6 +1,4 @@
-import path from 'path'
-
-const resolvePath = relativePath => path.resolve(__dirname, relativePath)
+// const alias = require('./build/alias')
 
 const styleLoader = {
   loader: 'style-loader',
@@ -19,10 +17,10 @@ const config = {
   //   chunkFilename: 'asset/[name]-chunk-[chunkhash:5].js',
   // },
   resolve: {
-    alias: {
-      share: resolvePath('./src'),
-    },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.less'],
+    alias: {
+      share: './src/',
+    },
   },
   module: {
     rules: [
@@ -202,4 +200,4 @@ const config = {
   },
 }
 
-export default config
+module.exports = config
