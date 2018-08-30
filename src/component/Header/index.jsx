@@ -8,7 +8,7 @@ const { Header } = Layout
 
 @inject('store')
 @observer
-export default class AppHeader extends React.Component {
+class AppHeader extends React.Component {
   static propTypes = {
     store: PropTypes.shape({
       app: PropTypes.shape({
@@ -41,3 +41,4 @@ export default class AppHeader extends React.Component {
     )
   }
 }
+export default AppHeader

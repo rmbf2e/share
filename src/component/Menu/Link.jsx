@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react'
 
 @inject('store')
 @observer
-export default class MenuLink extends React.Component {
+class MenuLink extends React.Component {
   static propTypes = {
     store: PropTypes.shape({
       router: PropTypes.object,
@@ -33,3 +33,4 @@ export default class MenuLink extends React.Component {
     return <Link {...props} onClick={this.checkSamePathname} />
   }
 }
+export default MenuLink

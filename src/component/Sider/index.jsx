@@ -7,7 +7,7 @@ import MenuLink from 'share/component/Menu/Link'
 
 @inject('store')
 @observer
-export default class Sider extends React.Component {
+class Sider extends React.Component {
   static propTypes = {
     store: PropTypes.shape({
       menu: PropTypes.object,
@@ -68,3 +68,4 @@ export default class Sider extends React.Component {
     )
   }
 }
+export default Sider

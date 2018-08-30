@@ -24,7 +24,7 @@ import { parseMoment, formatMoment } from 'share/util/moment'
  */
 @inject('store')
 @observer
-export default class SearchForm extends React.Component {
+class SearchForm extends React.Component {
   // 标记此次history push是否由submit引起，避免submit引起的history变更调用两次props.onSubmit
   pushedBySubmit = false
 
@@ -177,3 +177,4 @@ export default class SearchForm extends React.Component {
     )
   }
 }
+export default SearchForm

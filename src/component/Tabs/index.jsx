@@ -10,7 +10,7 @@ import { inject, observer } from 'mobx-react'
 
 @inject('store')
 @observer
-export default class TabsMemoryByHash extends Component {
+class TabsMemoryByHash extends Component {
   static TabPane = Tabs.TabPane
 
   defaultActiveKey = ''
@@ -62,3 +62,4 @@ export default class TabsMemoryByHash extends Component {
     return <Tabs {...props} defaultActiveKey={this.defaultActiveKey} />
   }
 }
+export default TabsMemoryByHash
