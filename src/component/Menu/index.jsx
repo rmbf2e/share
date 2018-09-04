@@ -1,7 +1,7 @@
 import React from 'react'
 import { toJS } from 'mobx'
 import PropTypes from 'prop-types'
-import { Menu } from 'antd'
+import Menu from 'antd/lib/menu'
 import { inject, observer } from 'mobx-react'
 import getFirstPathname from 'share/util/getFirstPathname'
 import Link from './Link'

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Layout } from 'antd'
+import Layout from 'antd/lib/layout'
 import { observer, inject } from 'mobx-react'
 import s from './style.m.less'
 

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { AnimatedSwitch } from 'react-router-transition'
 import { Switch } from 'react-router-dom'
-import { Layout } from 'antd'
+import Layout from 'antd/lib/layout'
 import Loading from 'share/component/Loading'
 import s from './style.m.less'
 
