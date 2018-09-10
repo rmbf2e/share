@@ -119,7 +119,7 @@ function rest(options) {
         return promise
       }
       decoratorObject[fetchMethod] = action
-      decoratorObject[option.name] = observable.shallow
+      decoratorObject[option.name] = observable
     }
     decoratorObject[setMethod] = action
     decoratorObject[restoreMethod] = action
