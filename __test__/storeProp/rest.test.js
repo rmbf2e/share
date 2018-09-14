@@ -1,6 +1,6 @@
 // import fetch from 'util/fetch'
 import EventEmitter from 'events'
-import { toJS, runInAction } from 'mobx'
+import { toJS } from 'mobx'
 import fetchMock from 'fetch-mock'
 import rest from 'share/storeProp/rest'
 import config from 'share/config'
@@ -320,6 +320,52 @@ describe('storeProp/rest', () => {
     expect(b.user).toEqual({})
   })
 
+  it('测试create时，使用对象格式参数', () => {
+    const b = new A()
+    const createdUser = { name: 'adf' }
+    const originCreateUrl = option.create.url
+    option.create.url = `${originCreateUrl}/:id`
+    fetchMock.post(
+      `${config.baseURL}${option.create.url.replace(':id', 3)}?b=2`,
+      createdUser,
+    )
+    return b
+      .createUser({
+        data: { a: 1 },
+        query: { b: 2 },
+        param: { id: 3 },
+      })
+      .then(() => {
+        const arg = fetchMock.calls()[0]
+        expect(arg[0].body).toEqual(JSON.stringify({ a: 1 }))
+        expect(arg[0].url).toEqual('/api/user/create/3?b=2')
+        // 恢复create的url
+        option.create.url = originCreateUrl
+      })
+  })
+
+  it('测试fetch时，使用对象格式参数', () => {
+    const b = new A()
+    const user = { name: 'adf' }
+    const originFetchUrl = option.fetch.url
+    option.fetch.url = `${originFetchUrl}/:id`
+    fetchMock.get(
+      `${config.baseURL}${option.fetch.url.replace(':id', 3)}?b=2`,
+      user,
+    )
+    return b
+      .fetchUser({
+        query: { b: 2 },
+        param: { id: 3 },
+      })
+      .then(() => {
+        const arg = fetchMock.calls()[0]
+        expect(arg[0].url).toEqual('/api/user/fetch/3?b=2')
+        // 恢复url
+        option.fetch.url = originFetchUrl
+      })
+  })
+
   describe('测试emit的参数', () => {
     class E extends EventEmitter {
       constructor() {
@@ -330,7 +376,7 @@ describe('storeProp/rest', () => {
     it('测试create的emit事件', () => {
       const e = new E()
       const createdUser = { name: 'adf' }
-      fetchMock.post(`${config.baseURL}${option.create.url}`, createdUser)
+      fetchMock.post(`${config.baseURL}${option.create.url}?a=1`, createdUser)
       const fn = jest.fn()
       e.on('user:changed', fn)
       e.on('user:created', fn)

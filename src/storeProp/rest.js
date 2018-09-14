@@ -3,6 +3,18 @@ import upperFirst from 'lodash/upperFirst'
 import castArray from 'lodash/castArray'
 import fxios from 'share/util/fxios'
 
+/**
+ * 判断参数的对象有且仅有data query param这几个属性
+ * @param {object} arg 参数对象
+ * @return {bool} 判断是否为有效的对象格式参数
+ * */
+const isValidArguments = arg => {
+  if (typeof arg !== 'object') {
+    return false
+  }
+  return Object.keys(arg).every(key => ['data', 'query', 'param'].includes(key))
+}
+
 /*
  * 生成以命名为核心的添删改方法与相关的请求状态属性
  * 例如options为 [{
@@ -55,31 +67,42 @@ function rest(options) {
     methods.forEach((method, index) => {
       if (option[method]) {
         const ing = `${ingWords[index]}${upperName}`
-        const doIt = `${method}${upperName}`
+        const requestMethod = `${method}${upperName}`
         extendObject[ing] = false
-        extendObject[doIt] = (data, query, param) => {
+        extendObject[requestMethod] = (...args) => {
+          let data = args[0]
+          let query
+          let param
+          if (isValidArguments(data) && args[1] === undefined) {
+            ;({ data, query, param } = data)
+          } else {
+            ;[query, param] = args.slice(1)
+          }
           this[ing] = true
           const { [method]: methodOption } = option
           if (methodOption.interceptor && methodOption.interceptor.request) {
             data = methodOption.interceptor.request(data)
           }
           const request = option[method].request || fxios[httpMethods[index]]
-          const promise = request({ url: methodOption.url, param }, data).then(
-            res => {
-              if (this.emit) {
-                this.emit(`${name}:changed`)
-                this.emit(`${name}:${pastWords[index]}`, res, { data, query })
-              }
-              this[restoreMethod]()
-              if (
-                methodOption.interceptor &&
-                methodOption.interceptor.response
-              ) {
-                return methodOption.interceptor.response(res)
-              }
-              return res
-            },
-          )
+          const promise = request(
+            { url: methodOption.url, param },
+            data,
+            query,
+          ).then(res => {
+            if (this.emit) {
+              this.emit(`${name}:changed`)
+              this.emit(`${name}:${pastWords[index]}`, res, {
+                data,
+                query,
+                param,
+              })
+            }
+            this[restoreMethod]()
+            if (methodOption.interceptor && methodOption.interceptor.response) {
+              return methodOption.interceptor.response(res)
+            }
+            return res
+          })
           promise.finally(
             action(`stop ${ing}`, () => {
               this[ing] = false
@@ -87,14 +110,21 @@ function rest(options) {
           )
           return promise
         }
-        decoratorObject[doIt] = action
+        decoratorObject[requestMethod] = action
       }
     })
     if (option.fetch) {
       const fetching = `fetching${upperName}`
       const fetchMethod = `fetch${upperName}`
       extendObject[fetching] = false
-      extendObject[fetchMethod] = (query, param) => {
+      extendObject[fetchMethod] = (...args) => {
+        let query = args[0]
+        let param
+        if (isValidArguments(query) && args[1] === undefined) {
+          ;({ query, param } = query)
+        } else {
+          ;[query, param] = args
+        }
         this[fetching] = true
         const fetchObj = option.fetch
         const setAction = action(setMethod, res => {
