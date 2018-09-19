@@ -17,19 +17,22 @@ class AppHeader extends React.Component {
       }),
     }).isRequired,
     children: PropTypes.node,
+    className: PropTypes.string,
   }
 
   static defaultProps = {
     children: null,
+    className: '',
   }
 
   render() {
     const {
       store: { app },
       children,
+      className,
     } = this.props
     return (
-      <Header className={s.header}>
+      <Header className={`${s.header} ${className}`}>
         {children}
         <figure className={s.me}>
           {app.me.name}
