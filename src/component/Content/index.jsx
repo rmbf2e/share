@@ -36,7 +36,6 @@ const AppContent = ({ loading, children }) => {
   ) : (
     <Switch>
       <AnimatedSwitch
-        id="animateWrapper"
         atEnter={transition.atEnter}
         atLeave={transition.atLeave}
         atActive={transition.atActive}
@@ -47,7 +46,7 @@ const AppContent = ({ loading, children }) => {
       </AnimatedSwitch>
     </Switch>
   )
-  return <Content id="appContent">{content}</Content>
+  return <Content className={s.content}>{content}</Content>
 }
 
 AppContent.propTypes = {
