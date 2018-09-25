@@ -90,12 +90,6 @@ describe('Menu', () => {
     ).not.toContain('ant-menu-item-active')
     submenu.prop('onTitleClick')()
     expect(toJS(menu.selectedKeys)).toEqual(['/child2'])
-    expect(
-      com
-        .find('li.ant-menu-submenu')
-        .at(1)
-        .html(),
-    ).toContain('ant-menu-item-active')
     com.unmount()
     done()
   })
@@ -128,12 +122,8 @@ describe('Menu', () => {
     const A = () => (
       <App store={store}>
         <div>
-          <Link to="/path1">
-path1
-          </Link>
-          <Link to="/path2">
-path2
-          </Link>
+          <Link to="/path1">path1</Link>
+          <Link to="/path2">path2</Link>
         </div>
       </App>
     )
