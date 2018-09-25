@@ -1,12 +1,14 @@
 import React from 'react'
 import { toJS } from 'mobx'
 import PropTypes from 'prop-types'
-import Menu from 'antd/lib/menu'
+import { Menu } from 'antd'
 import { inject, observer } from 'mobx-react'
 import getFirstPathname from 'share/util/getFirstPathname'
 import Link from './Link'
 
-const { SubMenu } = Menu
+// 用解构赋值jest --coverage时说Menu is not defined
+// eslint-disable-next-line
+const SubMenu = Menu.SubMenu
 
 /*
  * 在Header头文件中使用的菜单项组件
@@ -45,42 +47,32 @@ class Menus extends React.Component {
 
   renderMenus = () => {
     const {
-      store: {
-        menu,
-        router: { push },
-      },
+      store: { menu },
     } = this.props
     const menus = toJS(menu.menus)
-    const { sider } = menu
-    if (sider.collapsed) {
-      return menus.map(topMenu => (
-        <SubMenu key={topMenu.name} title={topMenu.name}>
-          {topMenu.children &&
-            topMenu.children.map(m => (
+    return menus.map(topMenu => (
+      <SubMenu key={topMenu.name} title={topMenu.name}>
+        {topMenu.children &&
+          topMenu.children.map(m => {
+            if (m.children) {
+              return (
+                <SubMenu key={m.name} title={m.name}>
+                  {m.children.map(c => (
+                    <Menu.Item key={c.to}>
+                      <Link to={c.to}>{c.name}</Link>
+                    </Menu.Item>
+                  ))}
+                </SubMenu>
+              )
+            }
+            return (
               <Menu.Item key={m.to}>
                 <Link to={m.to}>{m.name}</Link>
               </Menu.Item>
-            ))}
-        </SubMenu>
-      ))
-    }
-    return menus.map(topMenu => {
-      const m = topMenu.children && topMenu.children[0]
-      const key = menu.selectedKeys[0]
-      const props = {
-        key: topMenu.name,
-        title: topMenu.name,
-      }
-      if (m && m.to) {
-        props.onTitleClick = () => push(m.to)
-      }
-      const className =
-        topMenu.children && topMenu.children.some(c => c.to === key)
-          ? 'ant-menu-item-active'
-          : ''
-      props.className = className
-      return <SubMenu {...props} />
-    })
+            )
+          })}
+      </SubMenu>
+    ))
   }
 
   render() {
