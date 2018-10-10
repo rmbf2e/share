@@ -89,6 +89,12 @@ class SearchForm extends React.Component {
       // searchForm.setQuery(this.compactFormValues(formValues))
       if (!this.pushedBySubmit) {
         form.setFieldsValue(formValues)
+        if (
+          'afterSetFieldsValue' in form &&
+          typeof form.afterSetFieldsValue === 'function'
+        ) {
+          form.afterSetFieldsValue(formValues)
+        }
       }
       this.pushedBySubmit = false
       if (pathname === this.pathname) {
