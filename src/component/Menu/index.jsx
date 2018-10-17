@@ -1,10 +1,11 @@
 import React from 'react'
 import { toJS } from 'mobx'
 import PropTypes from 'prop-types'
-import { Menu } from 'antd'
+import { Menu, Icon } from 'antd'
 import { inject, observer } from 'mobx-react'
 import getFirstPathname from 'share/util/getFirstPathname'
 import Link from './Link'
+import s from './styles.m.less'
 
 // 用解构赋值jest --coverage时说Menu is not defined
 // eslint-disable-next-line
@@ -51,7 +52,15 @@ class Menus extends React.Component {
     } = this.props
     const menus = toJS(menu.menus)
     return menus.map(topMenu => (
-      <SubMenu key={topMenu.name} title={topMenu.name}>
+      <SubMenu
+        key={topMenu.name}
+        title={
+          <React.Fragment>
+            {topMenu.name}
+            <Icon type="down" className={s.icon} />
+          </React.Fragment>
+        }
+      >
         {topMenu.children &&
           topMenu.children.map(m => {
             if (m.children) {
