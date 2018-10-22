@@ -1,5 +1,7 @@
 ## share components and utils
 
+### DEPRECATED, integrated with react-mobx-scaffold
+
 ### INTRODUCE
 你还在为多项目之间的共用组件编写npm包吗？试试git submodule
 npm发布的circle涉及到编写，版本，打包，发布到公有/私有仓库;
