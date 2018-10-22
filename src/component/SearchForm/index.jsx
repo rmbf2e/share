@@ -107,17 +107,18 @@ class SearchForm extends React.Component {
     this.stopSubscribeHistory()
   }
 
-  onSubmit = e => {
+  onSubmit = async e => {
     e.preventDefault()
     this.pushedBySubmit = true
     const {
       form,
-      // onSubmit,
+      onSubmit,
       store: {
         router: { push, location, query },
       },
       withPagination,
     } = this.props
+    await onSubmit()
     const formValues = form.getFieldsValue()
     // 若当前页面取消了某项搜索条件，则删除在query中对应的键
     forEach(
